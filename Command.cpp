@@ -1,0 +1,243 @@
+//
+// Created by meshi on 19/12/2019.
+//
+
+#include "Command.h"
+#include <iostream>
+#include <bits/stdc++.h>
+#include <vector>
+#include<unordered_map>
+
+namespace function_parser1 {
+    vector<string> parser(vector<string> vector) {
+        return vector;
+    }
+
+}
+using namespace function_parser1;
+
+using namespace std;
+//global variables-we will be able to reach them everywhere
+
+
+///opensevercommand class function
+//-------------------------------------------------
+int OpenSeverCommand::execute(vector<string> v) {
+    this->numPort = stoi(v.at(0));
+    this->numParm = 1;
+    //here we will need to call the func ‫‪openDataServe
+    //openDataServer();
+    return this->numParm;
+}
+
+void OpenSeverCommand::openDataServer() {
+    //openning the thread and etc
+
+}
+
+void OpenSeverCommand::setNumPort(int numPort) {
+    OpenSeverCommand::numPort = numPort;
+}
+
+void OpenSeverCommand::setNumParm(int numParm) {
+    OpenSeverCommand::numParm = numParm;
+}
+
+//------------------------------------------------------
+
+
+///ConnectCommand class function
+//--------------------------------------------------------
+int ConnectCommand::execute(vector<string> v) {
+    this->ip = v.at(0);
+    this->numPort = stoi(v.at(1));
+    this->numParm = 2;
+    //ConnectControlClient();
+    return this->numParm;
+
+}
+
+void ConnectCommand::ConnectControlClient() {
+    //we are client
+}
+//--------------------------------------------------------
+
+
+///Var class function
+//--------------------------------------------------------
+int Var::execute(vector<string> v) {
+    //need to do tell the simulator about the change- if the side is >
+    cout << "map" << std::endl;
+}
+
+Var::Var(string nameVar1, string side1, string sim1) { // Constructor with parameters
+    this->nameVar = nameVar1;
+    this->sim = sim1;
+    this->side = side1;
+}
+
+//just a var ,doesnt belong to the simulator
+Var::Var(string nameVar1, string value) { // Constructor with parameters
+    this->nameVar = nameVar1;
+    this->value = stoi(value);
+}
+
+void Var::setValue(double value) {
+    Var::value = value;
+}
+
+//--------------------------------------------------------
+
+//breaks -> sim("/controls/flight/speedbreak")
+//breaks = 0
+//--------------------------------------------------------
+int DefineVarCommand::execute(vector<string> v) {
+    //if var already exit
+    if (symbolTable.count(v.at(0)) > 0) {
+        //that's mean we are gonna change his value ,contain '='
+        if (v.at(1).compare("=")) {
+            //update his value
+            symbolTable.at(v.at(0))->setValue(stoi(v.at(2)));
+            symbolTable.at(v.at(0))->execute(v);
+            this->numParm = 3;
+        }
+    } else {
+        //case "var h0=heading"-var that doesnt belong to simulator
+        if (v.at(1).compare("=") == 0) {
+            Var *v1 = new Var(v.at(0), v.at(2));
+            //insert it to our map-string name var and var with his info
+            symbolTable[v.at(0)] = v1;
+            this->numParm = 3;
+        } else {
+            //create new var that do belong
+            Var *v1 = new Var(v.at(0), v.at(1), v.at(3));
+            //insert it to our map-string name var and var with his info
+            symbolTable[v.at(0)] = v1;
+            this->numParm = 4;
+        }
+
+    }
+    return this->numParm;
+
+}
+
+//--------------------------------------------------------
+
+//--------------------------------------------------------
+int ConditionParser::execute(vector<string> v) {
+    //create the condtions vector
+    vector<string> conditions;
+    int i;
+    //minmum-{,},condtion
+    int count = 4;
+    this->condition = v.at(1);
+    if (v.at(2).compare("{") == 0) {
+        i = 3;
+        while ((v.at(i).compare("}")) != 0) {
+            //add the condtion to the vector
+            conditions.push_back(v.at(i));
+            i++;
+            count++;
+        }
+    }
+    //check which case is it
+    //will go to his child-if or loop command,and run the excute commands
+    if (v.at(0).compare("while") == 0) {
+        LoopCommand loopCommand;
+        loopCommand.execute(conditions);
+    } else if (v.at(0).compare("if") == 0) {
+        IfCommand ifCommand;
+        ifCommand.execute(conditions);
+    }
+    return count;
+}
+
+bool ConditionParser::checkIfTrue(string condition) {
+    return true;
+}
+//--------------------------------------------------------
+
+
+int IfCommand::execute(vector<string> v) {
+    //initialize the condition bool
+    this->flagCondition = checkIfTrue(this->condition);
+    if (this->flagCondition) {
+        //if the condition is true we send the comannds to be excute by the func parser
+        function_parser1::parser(v);
+    }
+    return 0;
+}
+//--------------------------------------------------------
+
+int LoopCommand::execute(vector<string> v) {
+    //initialize the condition bool
+    this->flagCondition = checkIfTrue(this->condition);
+    while (this->flagCondition) {
+        //if the condition is true we send the comannds to be excute by the func parser
+        function_parser1::parser(v);
+        this->flagCondition = checkIfTrue(this->condition);
+    }
+    return 0;
+}
+
+//----------------------------------
+int SleepCommand::execute(vector<string> v) {
+//make the thread sleep
+    this->numparm = 1;
+    this->mili = stoi(v.at(0));
+    return this->numparm;
+}
+
+
+//--------------------------------------------
+int PrintCommand::execute(vector<string> v) {
+    this->printValue = v.at(0);
+    this->numParm = 1;
+    //need to take him to interpeter?
+    std::cout << this->printValue << std::endl;
+    return this->numParm;
+}
+
+
+//--------------------------------------------------
+//void DefineVarCommand:: BuildList(vector<string> v) {
+//    list<Command *> commandss;
+//    int i = 0;
+//    if (v.at(0).compare("{")==0) {
+//        i = 1;
+//        while ((v.at(i).compare("}")) != 0) {
+//            //check if it exit in the vars map ,that's means its var
+//            if (symbolTable.count(v.at(i)) > 0) {
+//                if (v.at(i+1).compare("=")==0) {
+//                    //update his value
+//                    symbolTable.at(v.at(i))->setValue(stoi(v.at(i+2)));
+//                    //we will add him to the list we need to excute
+//                    commandss.push_back(symbolTable.at(v.at(i)));
+//                    i = i + 3;
+//                }
+////                //if its print command/sleep command
+////                if (v.at(i).compare("Print")) {
+////                    PrintCommand printCommand = command_table.at(v.at(i));
+//////                    this->commands.push_back(command_table.at(v.at(i)));
+////i=i++;
+////                }
+//
+//            }
+//        }
+//    }
+//}
+//            //check if it exit in the vars map ,that's means its var
+//            if (symbolTable.count(v.at(i)) > 0) {
+//                if (v.at(i + 1).compare("=")) {
+//                    //update his value
+//                    symbolTable.at(v.at(i))->setValue(stoi(v.at(2)));
+//                    //we will add him to the list we need to excute
+//                    this->commands.push_back(symbolTable.at(v.at(i)));
+//                }
+//                    //if its print command/sleep command
+//               if(v.at(i).compare("Print")) {
+//                   PrintCommand printCommand=command_table.at(v.at(i));
+//                    this->commands.push_back(command_table.at(v.at(i)));
+//                }
+//            }
+//        }
