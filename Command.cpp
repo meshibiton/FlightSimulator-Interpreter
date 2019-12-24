@@ -1,23 +1,45 @@
 //
-// Created by meshi on 19/12/2019.
+// Created by meshi on 23/12/2019.
 //
+
 
 #include "Command.h"
 #include <iostream>
 #include <bits/stdc++.h>
 #include <vector>
 #include<unordered_map>
+#include "Interpreter.h"
+#include "GlobalFunction.h"
 
-namespace function_parser1 {
-    vector<string> parser(vector<string> vector) {
-        return vector;
-    }
+//namespace function_parser1 {
+//    vector<string> parser(vector<string> vector) {
+//        return vector;
+//    }
+//
+//    double interpreter(string expression) {
+//        Interpreter *i = new Interpreter();
+//        Expression *e = nullptr;
+//        try {
+//            e = i->interpret(expression);
+//            double result = e->calculate();
+//            std::cout << "6: " << result << std::endl;//-10
+//            delete e;
+//            delete i;
+//        } catch (const char *e) {
+//            if (e != nullptr) {
+//                delete e;
+//            }
+//            if (i != nullptr) {
+//                delete i;
+//            }
+//        }
+//    }
+//}
 
-}
-using namespace function_parser1;
+using namespace Global_Functions;
 
 using namespace std;
-//global variables-we will be able to reach them everywhere
+//global variables-we will be able to reach them everywhere..
 
 
 ///opensevercommand class function
@@ -77,13 +99,17 @@ Var::Var(string nameVar1, string side1, string sim1) { // Constructor with param
 }
 
 //just a var ,doesnt belong to the simulator
-Var::Var(string nameVar1, string value) { // Constructor with parameters
+Var::Var(string nameVar1, double value) { // Constructor with parameters
     this->nameVar = nameVar1;
-    this->value = stoi(value);
+    this->value = value;
 }
 
-void Var::setValue(double value) {
-    Var::value = value;
+void Var::setValue(double value1) {
+    this->value=value1;
+}
+
+double Var::getValue() const {
+    return value;
 }
 
 //--------------------------------------------------------
@@ -95,16 +121,18 @@ int DefineVarCommand::execute(vector<string> v) {
     //if var already exit
     if (symbolTable.count(v.at(0)) > 0) {
         //that's mean we are gonna change his value ,contain '='
-        if (v.at(1).compare("=")) {
+        if (v.at(1).compare("=") == 0) {
             //update his value
-            symbolTable.at(v.at(0))->setValue(stoi(v.at(2)));
+            double newValue=interpreter(v.at(2));
+            symbolTable.at(v.at(0))->setValue(newValue);
+            // symbolTable.at(v.at(0))->setValue(stoi(v.at(2)));
             symbolTable.at(v.at(0))->execute(v);
             this->numParm = 3;
         }
     } else {
         //case "var h0=heading"-var that doesnt belong to simulator
         if (v.at(1).compare("=") == 0) {
-            Var *v1 = new Var(v.at(0), v.at(2));
+            Var *v1 = new Var(v.at(0), interpreter(v.at(2)));
             //insert it to our map-string name var and var with his info
             symbolTable[v.at(0)] = v1;
             this->numParm = 3;
@@ -128,7 +156,7 @@ int ConditionParser::execute(vector<string> v) {
     //create the condtions vector
     vector<string> conditions;
     int i;
-    //minmum-{,},condtion
+    //minmum-{,},condtion.
     int count = 4;
     this->condition = v.at(1);
     if (v.at(2).compare("{") == 0) {
@@ -144,16 +172,23 @@ int ConditionParser::execute(vector<string> v) {
     //will go to his child-if or loop command,and run the excute commands
     if (v.at(0).compare("while") == 0) {
         LoopCommand loopCommand;
+        loopCommand.condition = this->condition;
         loopCommand.execute(conditions);
     } else if (v.at(0).compare("if") == 0) {
         IfCommand ifCommand;
+        ifCommand.condition = this->condition;
         ifCommand.execute(conditions);
     }
     return count;
 }
 
 bool ConditionParser::checkIfTrue(string condition) {
-    return true;
+    double result;
+    result = interpreter(condition);
+    if (result) {
+        return true;
+    }
+    return false;
 }
 //--------------------------------------------------------
 
@@ -163,7 +198,7 @@ int IfCommand::execute(vector<string> v) {
     this->flagCondition = checkIfTrue(this->condition);
     if (this->flagCondition) {
         //if the condition is true we send the comannds to be excute by the func parser
-        function_parser1::parser(v);
+        parser(v);
     }
     return 0;
 }
@@ -174,7 +209,7 @@ int LoopCommand::execute(vector<string> v) {
     this->flagCondition = checkIfTrue(this->condition);
     while (this->flagCondition) {
         //if the condition is true we send the comannds to be excute by the func parser
-        function_parser1::parser(v);
+        parser(v);
         this->flagCondition = checkIfTrue(this->condition);
     }
     return 0;
@@ -184,16 +219,22 @@ int LoopCommand::execute(vector<string> v) {
 int SleepCommand::execute(vector<string> v) {
 //make the thread sleep
     this->numparm = 1;
-    this->mili = stoi(v.at(0));
+    this->mili = interpreter(v.at(0));
     return this->numparm;
 }
 
 
 //--------------------------------------------
 int PrintCommand::execute(vector<string> v) {
-    this->printValue = v.at(0);
+    if (v.at(0).rfind("\"", 0) == 0) {
+//    if ((v.at(0)).rfind("\"", 0) != std::string::npos) {
+//        //that's means it's string,delet the quotes
+        this->printValue = earseChar(v.at(0),"\"");
+    } else {
+        //in case of expression
+        this->printValue = to_string(interpreter(v.at(0)));
+    }
     this->numParm = 1;
-    //need to take him to interpeter?
     std::cout << this->printValue << std::endl;
     return this->numParm;
 }

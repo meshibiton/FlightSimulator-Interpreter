@@ -37,19 +37,26 @@ primer = 3
 starter = 1
 autostart = 1
 Print("engine is warming...")
+rpm=20
 Print(rpm)
 while rpm <= 750 {
 	Print(rpm)
+	rpm=800
 }
 Sleep(5000)
 Print("let's fly")
+heading=30
 var h0 = heading
 breaks = 0
 throttle = 1
+roll=70
+pitch=80
+alt=80
 while alt < 1000 {
 	rudder = (h0 - heading)/80
 	aileron = -roll / 70
 	elevator = pitch / 50
 	Sleep(250)
+	alt=1200
 }
 Print("done")

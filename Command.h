@@ -1,7 +1,7 @@
 //
 // Created by meshi on 19/12/2019.
 //
-#pragma once
+
 #ifndef FINALPROJECT_COMMAND_H
 #define FINALPROJECT_COMMAND_H
 
@@ -13,10 +13,10 @@
 using namespace std;
 
 
-/// this is Base class-command, its an inteface- abstract class
+/// this is Base class-command, its an inteface- abstract class.
 class Command {
 public:
-    ///this method will be implement in his children
+    ///this method will be implement in his children.
     virtual int execute(vector<string>) = 0;
 };
 
@@ -44,8 +44,8 @@ public:
 
 class PrintCommand : public Command {
 private:
-   string printValue;
-   int numParm;
+    string printValue;
+    int numParm;
 public:
     //print the value
     int execute(vector<string>) override ;
@@ -72,7 +72,7 @@ class Var : public DefineVarCommand {
 private:
     string nameVar;
     double value;
-    //the string like in xml file
+    //the string like in xml file.
     string sim;
     //arrow left or right
     string side;
@@ -81,8 +81,10 @@ public:
 
     //constructor
     Var(string nameVar1, string side1, string sim1);
-    Var(string nameVar1, string value);
+    Var(string nameVar1, double value);
     void setValue(double value);
+
+    double getValue() const;
 };
 
 class ConditionParser : public Command {
@@ -99,7 +101,7 @@ class IfCommand : public ConditionParser {
 private:
     bool flagCondition=false;
 public:
-     int execute(vector<string>) override ;
+    int execute(vector<string>) override ;
 };
 
 ///child of conditionParser
@@ -110,10 +112,7 @@ public:
     int execute(vector<string>) override ;
 };
 
-vector<string> lineVector(string line);
-
-///map with all the vars initialze in it
-extern unordered_map<string, Var *> symbolTable;
-extern  unordered_map<string, Command *> command_table;
+//extern unordered_map<string, Var *> symbolTable;
+//extern unordered_map<string, Command *> command_table;
 
 #endif //FINALPROJECT_COMMAND_H

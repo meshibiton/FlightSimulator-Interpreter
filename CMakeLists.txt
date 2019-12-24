@@ -3,4 +3,4 @@ project(untitled2)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(untitled2 main.cpp Command.cpp Command.h)
+add_executable(untitled2 main.cpp Command.cpp Command.h Expression.h Interpreter.cpp Interpreter.h GlobalFunction.h GlobalFunction.cpp)
