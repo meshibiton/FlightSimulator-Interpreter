@@ -48,7 +48,7 @@ int OpenSeverCommand::execute(vector<string> v) {
     this->numPort = stoi(v.at(0));
     this->numParm = 1;
     //here we will need to call the func ‫‪openDataServe
-    openDataServer(this->numPort);
+//    openDataServer(this->numPort);
     return this->numParm;
 }
 //
@@ -108,6 +108,10 @@ void Var::setValue(double value1) {
     this->value=value1;
 }
 
+const string &Var::getSim() const {
+    return sim;
+}
+
 double Var::getValue() const {
     return value;
 }
@@ -137,10 +141,12 @@ int DefineVarCommand::execute(vector<string> v) {
             symbolTable[v.at(0)] = v1;
             this->numParm = 3;
         } else {
-            //create new var that do belong
+            //create new var that do belong the simulator
             Var *v1 = new Var(v.at(0), v.at(1), v.at(3));
             //insert it to our map-string name var and var with his info
             symbolTable[v.at(0)] = v1;
+            //add this var to the simulator map so after reciving data we will be able to update the var
+            mapSimToPairVar[v1->getSim()].first=v1;
             this->numParm = 4;
         }
 
@@ -198,7 +204,7 @@ int IfCommand::execute(vector<string> v) {
     this->flagCondition = checkIfTrue(this->condition);
     if (this->flagCondition) {
         //if the condition is true we send the comannds to be excute by the func parser
-        parser(v);
+        parser(v,"commandOnly");
     }
     return 0;
 }
@@ -209,7 +215,7 @@ int LoopCommand::execute(vector<string> v) {
     this->flagCondition = checkIfTrue(this->condition);
     while (this->flagCondition) {
         //if the condition is true we send the comannds to be excute by the func parser
-        parser(v);
+        parser(v,"commandOnly");
         this->flagCondition = checkIfTrue(this->condition);
     }
     return 0;
