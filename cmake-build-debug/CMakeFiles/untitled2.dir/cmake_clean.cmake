@@ -1,10 +1,10 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/untitled2.dir/Command.cpp.o"
-  "CMakeFiles/untitled2.dir/GlobalFunction.cpp.o"
-  "CMakeFiles/untitled2.dir/Interpreter.cpp.o"
   "CMakeFiles/untitled2.dir/main.cpp.o"
-  "untitled2"
+  "CMakeFiles/untitled2.dir/Command.cpp.o"
+  "CMakeFiles/untitled2.dir/Interpreter.cpp.o"
+  "CMakeFiles/untitled2.dir/GlobalFunction.cpp.o"
   "untitled2.pdb"
+  "untitled2"
 )
 
 # Per-language clean rules from dependency scanning.

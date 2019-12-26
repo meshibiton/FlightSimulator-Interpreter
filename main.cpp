@@ -13,9 +13,20 @@
 using namespace std;
 using  namespace Global_Functions;
 
+
+int main() {
+    creatMapSimToPairVar();
+    vector<string> vec2 = lexer();
+    parser(vec2, "main");
+    finishLock.lock();
+    finishLock.unlock();
+
+    return 0;
+}
+
 //unordered_map<string, Command *> command_table;
 //unordered_map<string, Var *> symbolTable;
-
+//
 //string earseChar(string string1, string chars);
 //void parser(vector<string> vectorLexer);
 //vector<string> lineVector(string line, char char1);
@@ -23,10 +34,10 @@ using  namespace Global_Functions;
 ////void printVector(vector<string> tokens);
 //string TrimLeft(const std::string& str);
 //string TrimRight(string& str);
-
-
-
-
+//
+//
+//
+//
 ////create vector by split by the ' ' char
 //vector<string> lineVector(string line, char char1) {
 //
@@ -41,14 +52,14 @@ using  namespace Global_Functions;
 //    return tokens;
 //
 //}
-
+//
 //void printVector(vector<string> tokens) {
 //    // Printing the token vector
 //    for (int i = 0; i < tokens.size(); i++)
 //        //    cout << tokens[i] + ' ';
 //        cout << tokens[i] +' ';
 //}
-
+//
 //string earseChar(string string1, string chars) {
 //
 ////// remove space from the end
@@ -86,7 +97,7 @@ using  namespace Global_Functions;
 //
 //
 //}
-
+//
 //////implement the execute of each line
 //void parser(vector<string> vectorLexer){
 //    creatMapCommend();
@@ -226,9 +237,3 @@ using  namespace Global_Functions;
 //        cout << "Unable to open file"<<endl;
 //    }
 //}
-
-    int main() {
-        vector<string> vec2 = lexer();
-        parser(vec2);
-        return 0;
-    }

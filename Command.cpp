@@ -48,14 +48,14 @@ int OpenSeverCommand::execute(vector<string> v) {
     this->numPort = stoi(v.at(0));
     this->numParm = 1;
     //here we will need to call the func ‫‪openDataServe
-    //openDataServer();
+    openDataServer(this->numPort);
     return this->numParm;
 }
-
-void OpenSeverCommand::openDataServer() {
-    //openning the thread and etc
-
-}
+//
+//void OpenSeverCommand::openDataServer() {
+//    //openning the thread and etc
+//
+//}
 
 void OpenSeverCommand::setNumPort(int numPort) {
     OpenSeverCommand::numPort = numPort;

@@ -27,7 +27,7 @@ private:
     int numParm;
 public:
     int execute(vector<string>) override ;
-    void openDataServer();
+//    void openDataServer();
     void setNumPort(int numPort);
     void setNumParm(int numParm);
 };
