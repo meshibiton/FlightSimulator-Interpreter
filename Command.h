@@ -39,7 +39,7 @@ private:
     int numParm;
 public:
     int execute(vector<string>) override ;
-    void ConnectControlClient();
+    void connectControlClient(string ip, int port);
 };
 
 class PrintCommand : public Command {

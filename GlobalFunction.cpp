@@ -41,8 +41,8 @@ namespace Global_Functions {
     unordered_map<string, Var *> symbolTable;
     unordered_map<string, pair<Var* ,float>> mapSimToPairVar;
     queue<string> queueMessages;
-    std::mutex finishLock;
-    std::mutex lockSimulatorTable;
+//    std::mutex finishLock;
+//    std::mutex lockSimulatorTable;
     bool  closeSocketServer = false;
     bool  isDoneCloseSocketClient = false;
 
@@ -109,6 +109,7 @@ namespace Global_Functions {
 //implement the execute of each line--------------------------------------------
 
     void parser(vector<string> vectorLexer, string flagCondition) {
+//        finishLock.lock();
         vector<string>::iterator it1;
         string tempString;
         int index = 0;
@@ -292,6 +293,7 @@ namespace Global_Functions {
 //update each line we get from the simultor
 
     void updateVariablesVul(string line ){
+        bool deletTheFlagRpm = false;
         unordered_map<string, pair<Var*,float >>::iterator iter;
         string stringNum= "";
         int counter =0;
@@ -408,19 +410,23 @@ namespace Global_Functions {
                         break;
                     case 35:
                         iter = mapSimToPairVar.find("/engines/engine/rpm");
+                        deletTheFlagRpm = true;
                         break;
                     default:
                         break;
                 }
 
                 float numDouble = stof(stringNum);
+                if (deletTheFlagRpm){
+
+                }
                 //avoid from critical section
-                lockSimulatorTable.lock();
+//                lockSimulatorTable.lock();
                 iter->second.second = numDouble;
                 if(iter->second.first != nullptr) {
                     iter->second.first->setValue(numDouble);
                 }
-                lockSimulatorTable.unlock();
+//                lockSimulatorTable.unlock();
                 stringNum= "";
                 counter++;
             }
@@ -464,7 +470,7 @@ namespace Global_Functions {
             send(client_socket , hello , strlen(hello) , 0 );
         }
         close(client_socket);
-        finishLock.unlock();
+//        finishLock.unlock();
 
     }
 
@@ -486,7 +492,7 @@ namespace Global_Functions {
         sockaddr_in address; //in means IP4
         address.sin_family = AF_INET;
         address.sin_addr.s_addr = INADDR_ANY; //give me any IP allocated for my machine
-        address.sin_port = htons(5400);
+        address.sin_port = htons(5400);//5400
         //we need to convert our number
         // to a number that the network understands.
 
@@ -512,7 +518,7 @@ namespace Global_Functions {
         }
         close(socketfd);
 
-        finishLock.lock();
+//        finishLock.lock();
         std::thread thread1(serverSide,client_socket);
 
         if(thread1.joinable()){
@@ -583,7 +589,7 @@ void connectControlClient(string ip, int port){
         sockaddr_in address; //in means IP4
         address.sin_family = AF_INET;//IP4
         address.sin_addr.s_addr = inet_addr("127.0.0.1");  //the localhost address
-        address.sin_port = htons(5402);
+        address.sin_port = htons(5402);//5402
         //we need to convert our number (both port & localhost)
         // to a number that the network understands.
 
@@ -620,7 +626,7 @@ void connectControlClient(string ip, int port){
                 strcpy(bufferMessege, queueMessages.front().c_str());
                 int is_sent = send(client_socket, bufferMessege, strlen(bufferMessege), 0);
                 if (is_sent == -1) {
-                    std::cout << "Error sending message" << std::endl;
+              //      std::cout << "Error sending message" << std::endl;
                     char buffer[1024] = {0};
                     int valread = read(client_socket, buffer, 1024);
                     std::cout << buffer << std::endl;

@@ -44,8 +44,8 @@ namespace Global_Functions {
     extern unordered_map<string, pair<Var* ,float>> mapSimToPairVar;
     extern bool  closeSocketServer;
     extern bool  isDoneCloseSocketClient;
-    extern std::mutex finishLock;
-    extern std::mutex lockSimulatorTable;
+//    extern std::mutex finishLock;
+//    extern std::mutex lockSimulatorTable;
     extern queue<string> queueMessages;
 
 }

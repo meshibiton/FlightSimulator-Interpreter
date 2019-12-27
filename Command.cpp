@@ -49,7 +49,7 @@ int OpenSeverCommand::execute(vector<string> v) {
     this->numPort = stoi(v.at(0));
     this->numParm = 1;
     //here we will need to call the func ‫‪openDataServe
-//    openDataServer(this->numPort);
+    openDataServer(this->numPort);
     return this->numParm;
 }
 //
@@ -75,15 +75,11 @@ int ConnectCommand::execute(vector<string> v) {
     this->ip = v.at(0);
     this->numPort = stoi(v.at(1));
     this->numParm = 2;
-    //ConnectControlClient();
+    Global_Functions::connectControlClient(this->ip, this->numPort);
     return this->numParm;
 
 }
-//
-//void ConnectCommand::ConnectControlClient() {
-//    //we are client
-//}
-//--------------------------------------------------------
+
 
 
 ///Var class function
@@ -127,6 +123,7 @@ double Var::getValue() const {
 //breaks = 0
 //--------------------------------------------------------
 int DefineVarCommand::execute(vector<string> v) {
+//    lockSimulatorTable.lock();
     //if var already exit
     if (symbolTable.count(v.at(0)) > 0) {
         //that's mean we are gonna change his value ,contain '='
@@ -141,7 +138,7 @@ int DefineVarCommand::execute(vector<string> v) {
             string path = symbolTable.at(v.at(0))->getSim().substr(1);
             //thats mean it gonna effect the simulator
             if (symbolTable.at(v.at(0))->getSide() == "->") {
-                Global_Functions::messages.push("set " + path + " " + to_string(newValue) + "\r\n");
+                Global_Functions::queueMessages.push("set " + path + " " + to_string(newValue) + "\r\n");
             }
         }
     } else {
@@ -169,6 +166,7 @@ int DefineVarCommand::execute(vector<string> v) {
         }
 
     }
+//    lockSimulatorTable.unlock();
     return this->numParm;
 
 }
