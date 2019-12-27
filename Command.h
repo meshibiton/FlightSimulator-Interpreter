@@ -53,7 +53,7 @@ public:
 
 class SleepCommand : public Command {
 private:
-    double mili;
+    int mili;
     int numparm;
 public:
     //sleeping
@@ -85,6 +85,10 @@ public:
     void setValue(double value);
 
     double getValue() const;
+
+    const string &getSim() const;
+
+    const string &getSide() const;
 };
 
 class ConditionParser : public Command {

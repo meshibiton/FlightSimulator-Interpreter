@@ -2,7 +2,7 @@
 // Created by meshi on 23/12/2019.
 //
 
-
+#include <utility>
 #include "Command.h"
 #include <iostream>
 #include <bits/stdc++.h>
@@ -10,6 +10,7 @@
 #include<unordered_map>
 #include "Interpreter.h"
 #include "GlobalFunction.h"
+#include <iterator>
 
 //namespace function_parser1 {
 //    vector<string> parser(vector<string> vector) {
@@ -78,10 +79,10 @@ int ConnectCommand::execute(vector<string> v) {
     return this->numParm;
 
 }
-
-void ConnectCommand::ConnectControlClient() {
-    //we are client
-}
+//
+//void ConnectCommand::ConnectControlClient() {
+//    //we are client
+//}
 //--------------------------------------------------------
 
 
@@ -105,7 +106,11 @@ Var::Var(string nameVar1, double value) { // Constructor with parameters
 }
 
 void Var::setValue(double value1) {
-    this->value=value1;
+    this->value = value1;
+}
+
+const string &Var::getSide() const {
+    return side;
 }
 
 const string &Var::getSim() const {
@@ -127,11 +132,17 @@ int DefineVarCommand::execute(vector<string> v) {
         //that's mean we are gonna change his value ,contain '='
         if (v.at(1).compare("=") == 0) {
             //update his value
-            double newValue=interpreter(v.at(2));
+            double newValue = interpreter(v.at(2));
             symbolTable.at(v.at(0))->setValue(newValue);
             // symbolTable.at(v.at(0))->setValue(stoi(v.at(2)));
             symbolTable.at(v.at(0))->execute(v);
             this->numParm = 3;
+            //now we will push a new message to the client queue,he will send them to the simulator
+            string path = symbolTable.at(v.at(0))->getSim().substr(1);
+            //thats mean it gonna effect the simulator
+            if (symbolTable.at(v.at(0))->getSide() == "->") {
+                Global_Functions::messages.push("set " + path + " " + to_string(newValue) + "\r\n");
+            }
         }
     } else {
         //case "var h0=heading"-var that doesnt belong to simulator
@@ -146,7 +157,14 @@ int DefineVarCommand::execute(vector<string> v) {
             //insert it to our map-string name var and var with his info
             symbolTable[v.at(0)] = v1;
             //add this var to the simulator map so after reciving data we will be able to update the var
-            mapSimToPairVar[v1->getSim()].first=v1;
+            if (v1->getSide() == "<-") {
+                unordered_map<string, pair<Var*,float >>::iterator iter;
+                iter = mapSimToPairVar.find(v1->getSim());
+                if(iter!= mapSimToPairVar.end()) {
+                    //update him to point to the symboltable var
+                    (*iter).second.first = v1 ;
+                }
+            }
             this->numParm = 4;
         }
 
@@ -204,7 +222,7 @@ int IfCommand::execute(vector<string> v) {
     this->flagCondition = checkIfTrue(this->condition);
     if (this->flagCondition) {
         //if the condition is true we send the comannds to be excute by the func parser
-        parser(v,"commandOnly");
+        parser(v, "commandOnly");
     }
     return 0;
 }
@@ -215,7 +233,7 @@ int LoopCommand::execute(vector<string> v) {
     this->flagCondition = checkIfTrue(this->condition);
     while (this->flagCondition) {
         //if the condition is true we send the comannds to be excute by the func parser
-        parser(v,"commandOnly");
+        parser(v, "commandOnly");
         this->flagCondition = checkIfTrue(this->condition);
     }
     return 0;
@@ -226,6 +244,7 @@ int SleepCommand::execute(vector<string> v) {
 //make the thread sleep
     this->numparm = 1;
     this->mili = interpreter(v.at(0));
+    std::this_thread::sleep_for (std::chrono::milliseconds(this->mili));
     return this->numparm;
 }
 
@@ -235,7 +254,7 @@ int PrintCommand::execute(vector<string> v) {
     if (v.at(0).rfind("\"", 0) == 0) {
 //    if ((v.at(0)).rfind("\"", 0) != std::string::npos) {
 //        //that's means it's string,delet the quotes
-        this->printValue = earseChar(v.at(0),"\"");
+        this->printValue = earseChar(v.at(0), "\"");
     } else {
         //in case of expression
         this->printValue = to_string(interpreter(v.at(0)));

@@ -7,6 +7,7 @@
 #include<unordered_map>
 #include "Interpreter.h"
 #include "Command.h"
+#include "GlobalFunction.h"
 #include <algorithm>
 #include <iostream>
 #include <thread>
@@ -33,17 +34,18 @@
 using namespace std;
 using namespace this_thread;
 using namespace chrono;
-
-std::mutex finishLock;
-std::mutex lockSimTable;
-
 namespace Global_Functions {
 
-    //our global maps:
+    //our global maps and variables
     unordered_map<string, Command *> command_table;
     unordered_map<string, Var *> symbolTable;
     unordered_map<string, pair<Var* ,float>> mapSimToPairVar;
-    bool serverConnect =false;
+    queue<string> queueMessages;
+    std::mutex finishLock;
+    std::mutex lockSimulatorTable;
+    bool  closeSocketServer = false;
+    bool  isDoneCloseSocketClient = false;
+
 
 //remove right space-------------------------
     string TrimRight(std::string &str) {
@@ -137,7 +139,8 @@ namespace Global_Functions {
         }
         //the loop came from the main
         if (flagCondition == "main"){
-            is_done = true;
+            //kind of messege to close the socket client, and the client will send to the server, the server will unlock
+            isDoneCloseSocketClient = true;
         }
     }
 
@@ -300,7 +303,6 @@ namespace Global_Functions {
                 switch (counter) {
                     case 0:
                         iter = mapSimToPairVar.find("/instrumentation/airspeed-indicator/indicated-speed-kt");
-//                        iter = mapSimToPairVar-.find("/instrumentation/airspeed-indicator/indicated-speed-kt");
                         break;
                     case 1:
                         iter = mapSimToPairVar.find("/sim/time/warp");
@@ -410,60 +412,67 @@ namespace Global_Functions {
                     default:
                         break;
                 }
+
                 float numDouble = stof(stringNum);
+                //avoid from critical section
+                lockSimulatorTable.lock();
                 iter->second.second = numDouble;
                 if(iter->second.first != nullptr) {
                     iter->second.first->setValue(numDouble);
                 }
+                lockSimulatorTable.unlock();
                 stringNum= "";
                 counter++;
             }
         }
     }
-;
+
     //clean the buffer before sending it to updat the map, send line after line
     void  updateBufAndValue(char buffer []) {
 
         string lineForTable;
         string str;
         str = buffer;
-        int isExist = str.find("\n");
+        int isExist;
         size_t position = str.find("\n");      // position of "live" in str
+        //substr the first line mybe she isn"t completly
+        str = str.substr(position + 1,str.length());
+        isExist = str.find("\n");
+//    position = str.find("\n");
         while (isExist != -1) {
-            lineForTable = str.substr(0, position-1);
-            if (position != str.length()){
-                str = str.substr(position + 1,str.length());
-            }
 
-            str = earseChar(str, "\r");
-            str = earseChar(str, "\n");
-            //avoid from critical section
-            lockSimTable.lock();
+            lineForTable = str.substr(0, isExist);
             updateVariablesVul(lineForTable);
-            lockSimTable.unlock();
+            str = str.substr(isExist + 1,str.length());
             isExist = str.find("\n");
-            position = str.find("\n");
+//        position = str.find("\n");
+
         }
+
+
     }
 
 //the function that starting the thread of serverside
     void  serverSide( int client_socket){
-        char buffer[1024] = {0};
-        while (serverConnect){
-            //reading from client
+        while (!closeSocketServer){
+            char buffer[1024] = {0};
+            //reading from client(simulator) 36
             int valread = read( client_socket , buffer, 1024);
             updateBufAndValue(buffer);
-            sleep_for(seconds(2));
+//            sleep_for(seconds(2));
             const char *hello = "Hello, I can hear you! \n";
             send(client_socket , hello , strlen(hello) , 0 );
         }
+        close(client_socket);
+        finishLock.unlock();
+
     }
 
 
 
 //open data server created uniq socket by special  port and we running the socket on separate thread
 
-    void openDataServer(int port ){
+    void openDataServer(int port){
 
         //create socket
         int socketfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -484,12 +493,13 @@ namespace Global_Functions {
         //the actual bind command
         if (bind(socketfd, (struct sockaddr *) &address, sizeof(address)) == -1) {
             std::cerr<<"Could not bind the socket to an IP"<<std::endl;
+            return;
         }
         //making socket listen to the port
         if (listen(socketfd, 5) == -1) { //can also set to SOMAXCON (max connections)
             std::cerr<<"Error during listening command"<<std::endl;
+            return;
         } else{
-            serverConnect = true;
             std::cout<<"Server is now listening ..."<<std::endl;
         }
         // accepting a client
@@ -497,11 +507,14 @@ namespace Global_Functions {
                                    (socklen_t*)&address);
         if (client_socket == -1) {
             std::cerr<<"Error accepting client"<<std::endl;
+            return;
+
         }
-        close(socketfd); //closing the listening socket
+        close(socketfd);
 
+        finishLock.lock();
+        std::thread thread1(serverSide,client_socket);
 
-        std::thread thread1(serverSide, client_socket);
         if(thread1.joinable()){
             thread1.detach();
         }
@@ -556,8 +569,7 @@ namespace Global_Functions {
 
 // Client side C/C++ program to demonstrate Socket programming
 
-void connectControlClient(string ip, int port)
-{
+void connectControlClient(string ip, int port){
 
     //create socket
         int client_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -579,31 +591,50 @@ void connectControlClient(string ip, int port)
         int is_connect = connect(client_socket, (struct sockaddr *)&address, sizeof(address));
         if (is_connect == -1) {
             std::cerr << "Could not connect to host server"<<std::endl;
+            return;
         } else {
             std::cout<<"Client is now connected to server" <<std::endl;
         }
 
-        //if here we made a connection
-        char hello[] = "Hi from client";
-        int is_sent = send(client_socket , hello , strlen(hello) , 0 );
-        if (is_sent == -1) {
-            std::cout<<"Error sending message"<<std::endl;
-        } else {
-            std::cout<<"Hello message sent to server" <<std::endl;
+
+        std::thread thread2(clientSide,client_socket); //closing the listening socket);
+
+        if(thread2.joinable()){
+            thread2.detach();
         }
 
-        char buffer[1024] = {0};
-        int valread = read( client_socket , buffer, 1024);
-        std::cout<<buffer<<std::endl;
 
-        close(client_socket);
+//
+
+//
+//        close(client_socket);
 
     }
+//the function that starting the thread of server side
+    void  clientSide( int client_socket) {
+        while (!isDoneCloseSocketClient) {
+            if (!queueMessages.empty()) {
+                //take messege from the global queue
+                char bufferMessege[queueMessages.front().length()];
+                //insert to the buffer messege
+                strcpy(bufferMessege, queueMessages.front().c_str());
+                int is_sent = send(client_socket, bufferMessege, strlen(bufferMessege), 0);
+                if (is_sent == -1) {
+                    std::cout << "Error sending message" << std::endl;
+                    char buffer[1024] = {0};
+                    int valread = read(client_socket, buffer, 1024);
+                    std::cout << buffer << std::endl;
+                } else {
+                    std::this_thread::sleep_for (std::chrono::seconds(1));
+                }
+            }
+            close(client_socket);
+            closeSocketServer = true;
+
+        }
 
 
-
-
-
+    }
 }
 
 

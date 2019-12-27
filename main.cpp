@@ -15,8 +15,10 @@ using  namespace Global_Functions;
 
 
 int main() {
+    lock_guard<mutex> lock(finishLock);
     creatMapSimToPairVar();
     vector<string> vec2 = lexer();
+    finishLock.lock();
     parser(vec2, "main");
     finishLock.lock();
     finishLock.unlock();

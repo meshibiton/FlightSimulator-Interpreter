@@ -34,13 +34,18 @@ namespace Global_Functions {
     string earseChar(string string1, string chars);
     void updateVariablesVul(string);
     void  creatMapSimToPairVar();
+    ////--------------client connect function-----------------
+    void  clientSide( int client_socket);
+    void connectControlClient(string ip, int port);
 
 
     extern unordered_map<string, Command *> command_table;
     extern unordered_map<string, Var *> symbolTable;
     extern unordered_map<string, pair<Var* ,float>> mapSimToPairVar;
-    extern bool  is_done;
+    extern bool  closeSocketServer;
+    extern bool  isDoneCloseSocketClient;
     extern std::mutex finishLock;
-    extern std::mutex lockSimTable;
+    extern std::mutex lockSimulatorTable;
+    extern queue<string> queueMessages;
 
 }
