@@ -35,7 +35,7 @@ namespace Global_Functions {
     void updateVariablesVul(string);
     void  creatMapSimToPairVar();
     ////--------------client connect function-----------------
-    void  clientSide( int client_socket);
+    void  clientSide( string ip, int port);
     void connectControlClient(string ip, int port);
 
 
@@ -44,8 +44,9 @@ namespace Global_Functions {
     extern unordered_map<string, pair<Var* ,float>> mapSimToPairVar;
     extern bool  closeSocketServer;
     extern bool  isDoneCloseSocketClient;
-//    extern std::mutex finishLock;
-//    extern std::mutex lockSimulatorTable;
+    extern std::mutex finishLock;
+    extern std::mutex lockSimulatorTable;
     extern queue<string> queueMessages;
+
 
 }

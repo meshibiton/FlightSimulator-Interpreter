@@ -6,19 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/raph/CLionProjects/finalProject/Command.h
-iostream
+/home/raph/CLionProjects/finalProject (copy)/Command.cpp
+utility
 -
-string
--
-vector
--
-unordered_map
--
-
-/home/raph/CLionProjects/finalProject/Expression.h
-
-/home/raph/CLionProjects/finalProject/GlobalFunction.cpp
+Command.h
+/home/raph/CLionProjects/finalProject (copy)/Command.h
 iostream
 -
 bits/stdc++.h
@@ -28,9 +20,39 @@ vector
 unordered_map
 -
 Interpreter.h
-/home/raph/CLionProjects/finalProject/Interpreter.h
+/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
+GlobalFunction.h
+/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.h
+iterator
+-
+
+/home/raph/CLionProjects/finalProject (copy)/Command.h
+iostream
+-
+string
+-
+vector
+-
+unordered_map
+-
+
+/home/raph/CLionProjects/finalProject (copy)/Expression.h
+
+/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.cpp
+iostream
+-
+bits/stdc++.h
+-
+vector
+-
+unordered_map
+-
+Interpreter.h
+/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
 Command.h
-/home/raph/CLionProjects/finalProject/Command.h
+/home/raph/CLionProjects/finalProject (copy)/Command.h
+GlobalFunction.h
+/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.h
 algorithm
 -
 iostream
@@ -76,7 +98,7 @@ netinet/in.h
 arpa/inet.h
 -
 
-/home/raph/CLionProjects/finalProject/GlobalFunction.h
+/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.h
 iostream
 -
 bits/stdc++.h
@@ -86,11 +108,19 @@ vector
 unordered_map
 -
 Interpreter.h
-/home/raph/CLionProjects/finalProject/Interpreter.h
+/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
 Command.h
-/home/raph/CLionProjects/finalProject/Command.h
+/home/raph/CLionProjects/finalProject (copy)/Command.h
 
-/home/raph/CLionProjects/finalProject/Interpreter.h
+/home/raph/CLionProjects/finalProject (copy)/Interpreter.cpp
+Interpreter.h
+/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
+Command.h
+/home/raph/CLionProjects/finalProject (copy)/Command.h
+GlobalFunction.h
+/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.h
+
+/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
 string
 -
 stack
@@ -104,7 +134,7 @@ iterator
 map
 -
 Expression.h
-/home/raph/CLionProjects/finalProject/Expression.h
+/home/raph/CLionProjects/finalProject (copy)/Expression.h
 ctype.h
 -
 sstream
@@ -114,7 +144,7 @@ cstring
 iostream
 -
 
-/home/raph/CLionProjects/finalProject/main.cpp
+/home/raph/CLionProjects/finalProject (copy)/main.cpp
 iostream
 -
 fstream
@@ -130,9 +160,9 @@ sstream
 unordered_map
 -
 Command.h
-/home/raph/CLionProjects/finalProject/Command.h
+/home/raph/CLionProjects/finalProject (copy)/Command.h
 GlobalFunction.h
-/home/raph/CLionProjects/finalProject/GlobalFunction.h
+/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.h
 Interpreter.h
-/home/raph/CLionProjects/finalProject/Interpreter.h
+/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
 

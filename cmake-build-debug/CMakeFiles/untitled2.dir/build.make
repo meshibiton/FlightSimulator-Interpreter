@@ -43,10 +43,10 @@ RM = /home/raph/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/191.7479.33/bin/c
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/raph/CLionProjects/finalProject
+CMAKE_SOURCE_DIR = "/home/raph/CLionProjects/finalProject (copy)"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/raph/CLionProjects/finalProject/cmake-build-debug
+CMAKE_BINARY_DIR = "/home/raph/CLionProjects/finalProject (copy)/cmake-build-debug"
 
 # Include any dependencies generated for this target.
 include CMakeFiles/untitled2.dir/depend.make
@@ -59,55 +59,55 @@ include CMakeFiles/untitled2.dir/flags.make
 
 CMakeFiles/untitled2.dir/main.cpp.o: CMakeFiles/untitled2.dir/flags.make
 CMakeFiles/untitled2.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/raph/CLionProjects/finalProject/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/untitled2.dir/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/untitled2.dir/main.cpp.o -c /home/raph/CLionProjects/finalProject/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/raph/CLionProjects/finalProject (copy)/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/untitled2.dir/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/untitled2.dir/main.cpp.o -c "/home/raph/CLionProjects/finalProject (copy)/main.cpp"
 
 CMakeFiles/untitled2.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/untitled2.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/raph/CLionProjects/finalProject/main.cpp > CMakeFiles/untitled2.dir/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/raph/CLionProjects/finalProject (copy)/main.cpp" > CMakeFiles/untitled2.dir/main.cpp.i
 
 CMakeFiles/untitled2.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/untitled2.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/raph/CLionProjects/finalProject/main.cpp -o CMakeFiles/untitled2.dir/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/raph/CLionProjects/finalProject (copy)/main.cpp" -o CMakeFiles/untitled2.dir/main.cpp.s
 
 CMakeFiles/untitled2.dir/Command.cpp.o: CMakeFiles/untitled2.dir/flags.make
 CMakeFiles/untitled2.dir/Command.cpp.o: ../Command.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/raph/CLionProjects/finalProject/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/untitled2.dir/Command.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/untitled2.dir/Command.cpp.o -c /home/raph/CLionProjects/finalProject/Command.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/raph/CLionProjects/finalProject (copy)/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/untitled2.dir/Command.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/untitled2.dir/Command.cpp.o -c "/home/raph/CLionProjects/finalProject (copy)/Command.cpp"
 
 CMakeFiles/untitled2.dir/Command.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/untitled2.dir/Command.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/raph/CLionProjects/finalProject/Command.cpp > CMakeFiles/untitled2.dir/Command.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/raph/CLionProjects/finalProject (copy)/Command.cpp" > CMakeFiles/untitled2.dir/Command.cpp.i
 
 CMakeFiles/untitled2.dir/Command.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/untitled2.dir/Command.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/raph/CLionProjects/finalProject/Command.cpp -o CMakeFiles/untitled2.dir/Command.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/raph/CLionProjects/finalProject (copy)/Command.cpp" -o CMakeFiles/untitled2.dir/Command.cpp.s
 
 CMakeFiles/untitled2.dir/Interpreter.cpp.o: CMakeFiles/untitled2.dir/flags.make
 CMakeFiles/untitled2.dir/Interpreter.cpp.o: ../Interpreter.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/raph/CLionProjects/finalProject/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/untitled2.dir/Interpreter.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/untitled2.dir/Interpreter.cpp.o -c /home/raph/CLionProjects/finalProject/Interpreter.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/raph/CLionProjects/finalProject (copy)/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/untitled2.dir/Interpreter.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/untitled2.dir/Interpreter.cpp.o -c "/home/raph/CLionProjects/finalProject (copy)/Interpreter.cpp"
 
 CMakeFiles/untitled2.dir/Interpreter.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/untitled2.dir/Interpreter.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/raph/CLionProjects/finalProject/Interpreter.cpp > CMakeFiles/untitled2.dir/Interpreter.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/raph/CLionProjects/finalProject (copy)/Interpreter.cpp" > CMakeFiles/untitled2.dir/Interpreter.cpp.i
 
 CMakeFiles/untitled2.dir/Interpreter.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/untitled2.dir/Interpreter.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/raph/CLionProjects/finalProject/Interpreter.cpp -o CMakeFiles/untitled2.dir/Interpreter.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/raph/CLionProjects/finalProject (copy)/Interpreter.cpp" -o CMakeFiles/untitled2.dir/Interpreter.cpp.s
 
 CMakeFiles/untitled2.dir/GlobalFunction.cpp.o: CMakeFiles/untitled2.dir/flags.make
 CMakeFiles/untitled2.dir/GlobalFunction.cpp.o: ../GlobalFunction.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/raph/CLionProjects/finalProject/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/untitled2.dir/GlobalFunction.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/untitled2.dir/GlobalFunction.cpp.o -c /home/raph/CLionProjects/finalProject/GlobalFunction.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/raph/CLionProjects/finalProject (copy)/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/untitled2.dir/GlobalFunction.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/untitled2.dir/GlobalFunction.cpp.o -c "/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.cpp"
 
 CMakeFiles/untitled2.dir/GlobalFunction.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/untitled2.dir/GlobalFunction.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/raph/CLionProjects/finalProject/GlobalFunction.cpp > CMakeFiles/untitled2.dir/GlobalFunction.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.cpp" > CMakeFiles/untitled2.dir/GlobalFunction.cpp.i
 
 CMakeFiles/untitled2.dir/GlobalFunction.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/untitled2.dir/GlobalFunction.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/raph/CLionProjects/finalProject/GlobalFunction.cpp -o CMakeFiles/untitled2.dir/GlobalFunction.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.cpp" -o CMakeFiles/untitled2.dir/GlobalFunction.cpp.s
 
 # Object files for target untitled2
 untitled2_OBJECTS = \
@@ -125,7 +125,7 @@ untitled2: CMakeFiles/untitled2.dir/Interpreter.cpp.o
 untitled2: CMakeFiles/untitled2.dir/GlobalFunction.cpp.o
 untitled2: CMakeFiles/untitled2.dir/build.make
 untitled2: CMakeFiles/untitled2.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/raph/CLionProjects/finalProject/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable untitled2"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/raph/CLionProjects/finalProject (copy)/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable untitled2"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/untitled2.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -138,6 +138,6 @@ CMakeFiles/untitled2.dir/clean:
 .PHONY : CMakeFiles/untitled2.dir/clean
 
 CMakeFiles/untitled2.dir/depend:
-	cd /home/raph/CLionProjects/finalProject/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/raph/CLionProjects/finalProject /home/raph/CLionProjects/finalProject /home/raph/CLionProjects/finalProject/cmake-build-debug /home/raph/CLionProjects/finalProject/cmake-build-debug /home/raph/CLionProjects/finalProject/cmake-build-debug/CMakeFiles/untitled2.dir/DependInfo.cmake --color=$(COLOR)
+	cd "/home/raph/CLionProjects/finalProject (copy)/cmake-build-debug" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/raph/CLionProjects/finalProject (copy)" "/home/raph/CLionProjects/finalProject (copy)" "/home/raph/CLionProjects/finalProject (copy)/cmake-build-debug" "/home/raph/CLionProjects/finalProject (copy)/cmake-build-debug" "/home/raph/CLionProjects/finalProject (copy)/cmake-build-debug/CMakeFiles/untitled2.dir/DependInfo.cmake" --color=$(COLOR)
 .PHONY : CMakeFiles/untitled2.dir/depend
 

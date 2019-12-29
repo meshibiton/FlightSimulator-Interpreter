@@ -10,6 +10,7 @@ CMakeFiles/untitled2.dir/Command.cpp.o: ../Interpreter.h
 CMakeFiles/untitled2.dir/GlobalFunction.cpp.o: ../Command.h
 CMakeFiles/untitled2.dir/GlobalFunction.cpp.o: ../Expression.h
 CMakeFiles/untitled2.dir/GlobalFunction.cpp.o: ../GlobalFunction.cpp
+CMakeFiles/untitled2.dir/GlobalFunction.cpp.o: ../GlobalFunction.h
 CMakeFiles/untitled2.dir/GlobalFunction.cpp.o: ../Interpreter.h
 
 CMakeFiles/untitled2.dir/Interpreter.cpp.o: ../Command.h

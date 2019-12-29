@@ -12,30 +12,7 @@
 #include "GlobalFunction.h"
 #include <iterator>
 
-//namespace function_parser1 {
-//    vector<string> parser(vector<string> vector) {
-//        return vector;
-//    }
-//
-//    double interpreter(string expression) {
-//        Interpreter *i = new Interpreter();
-//        Expression *e = nullptr;
-//        try {
-//            e = i->interpret(expression);
-//            double result = e->calculate();
-//            std::cout << "6: " << result << std::endl;//-10
-//            delete e;
-//            delete i;
-//        } catch (const char *e) {
-//            if (e != nullptr) {
-//                delete e;
-//            }
-//            if (i != nullptr) {
-//                delete i;
-//            }
-//        }
-//    }
-//}
+
 
 using namespace Global_Functions;
 
@@ -86,7 +63,7 @@ int ConnectCommand::execute(vector<string> v) {
 //--------------------------------------------------------
 int Var::execute(vector<string> v) {
     //need to do tell the simulator about the change- if the side is >
-    cout << "map" << std::endl;
+   // cout << "map" << std::endl;
 }
 
 Var::Var(string nameVar1, string side1, string sim1) { // Constructor with parameters
@@ -132,6 +109,9 @@ int DefineVarCommand::execute(vector<string> v) {
             double newValue = interpreter(v.at(2));
             symbolTable.at(v.at(0))->setValue(newValue);
             // symbolTable.at(v.at(0))->setValue(stoi(v.at(2)));
+            if (v.at(0).compare("rpm")==0){
+                cout<<to_string(symbolTable.at(v.at(0))->getValue())<<endl;
+            }
             symbolTable.at(v.at(0))->execute(v);
             this->numParm = 3;
             //now we will push a new message to the client queue,he will send them to the simulator
@@ -166,8 +146,9 @@ int DefineVarCommand::execute(vector<string> v) {
         }
 
     }
-//    lockSimulatorTable.unlock();
+    lockSimulatorTable.unlock();
     return this->numParm;
+
 
 }
 
@@ -242,7 +223,7 @@ int SleepCommand::execute(vector<string> v) {
 //make the thread sleep
     this->numparm = 1;
     this->mili = interpreter(v.at(0));
-    std::this_thread::sleep_for (std::chrono::milliseconds(this->mili));
+    std::this_thread::sleep_for (std::chrono::milliseconds(10*(this->mili)));
     return this->numparm;
 }
 

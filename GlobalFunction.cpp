@@ -34,17 +34,18 @@
 using namespace std;
 using namespace this_thread;
 using namespace chrono;
+
 namespace Global_Functions {
 
     //our global maps and variables
     unordered_map<string, Command *> command_table;
     unordered_map<string, Var *> symbolTable;
-    unordered_map<string, pair<Var* ,float>> mapSimToPairVar;
+    unordered_map<string, pair<Var *, float>> mapSimToPairVar;
     queue<string> queueMessages;
-//    std::mutex finishLock;
-//    std::mutex lockSimulatorTable;
-    bool  closeSocketServer = false;
-    bool  isDoneCloseSocketClient = false;
+    std::mutex finishLock;
+    std::mutex lockSimulatorTable;
+    bool closeSocketServer = false;
+    bool isDoneCloseSocketClient = false;
 
 
 //remove right space-------------------------
@@ -139,7 +140,7 @@ namespace Global_Functions {
 
         }
         //the loop came from the main
-        if (flagCondition == "main"){
+        if (flagCondition == "main") {
             //kind of messege to close the socket client, and the client will send to the server, the server will unlock
             isDoneCloseSocketClient = true;
         }
@@ -275,7 +276,7 @@ namespace Global_Functions {
         try {
             e = i->interpret(expression);
             double result = e->calculate();
-            std::cout << "6: " << result << std::endl;//-10
+            //std::cout << "6: " << result << std::endl;//-10
             delete e;
             delete i;
             return result;
@@ -292,14 +293,14 @@ namespace Global_Functions {
 
 //update each line we get from the simultor
 
-    void updateVariablesVul(string line ){
-        bool deletTheFlagRpm = false;
-        unordered_map<string, pair<Var*,float >>::iterator iter;
-        string stringNum= "";
-        int counter =0;
-        for(int i = 0; i < line.length(); i++) {
+    void updateVariablesVul(string line) {
+
+        unordered_map<string, pair<Var *, float >>::iterator iter;
+        string stringNum = "";
+        int counter = 0;
+        for (int i = 0; i < line.length(); i++) {
             char char1 = line[i];
-            if(char1 != ',' && char1 != '\n') {
+            if (char1 != ',' && char1 != '\n') {
                 stringNum += char1;
             } else {
                 switch (counter) {
@@ -313,7 +314,7 @@ namespace Global_Functions {
                         iter = mapSimToPairVar.find("/controls/switches/magnetos");
                         break;
                     case 3:
-                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/offset-deg");
+                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/indicated-heading-deg");
                         break;
                     case 4:
                         iter = mapSimToPairVar.find("/instrumentation/altimeter/indicated-altitude-ft");
@@ -348,8 +349,9 @@ namespace Global_Functions {
                     case 14:
                         iter = mapSimToPairVar.find("/instrumentation/gps/indicated-vertical-speed");
                         break;
+
                     case 15:
-                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/indicated-heading-deg");
+                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/offset-deg");
                         break;
                     case 16:
                         iter = mapSimToPairVar.find("/instrumentation/magnetic-compass/indicated-heading-deg");
@@ -410,31 +412,28 @@ namespace Global_Functions {
                         break;
                     case 35:
                         iter = mapSimToPairVar.find("/engines/engine/rpm");
-                        deletTheFlagRpm = true;
                         break;
                     default:
                         break;
                 }
 
                 float numDouble = stof(stringNum);
-                if (deletTheFlagRpm){
 
-                }
                 //avoid from critical section
-//                lockSimulatorTable.lock();
+                lockSimulatorTable.lock();
                 iter->second.second = numDouble;
-                if(iter->second.first != nullptr) {
+                if (iter->second.first != nullptr) {
                     iter->second.first->setValue(numDouble);
                 }
-//                lockSimulatorTable.unlock();
-                stringNum= "";
+                lockSimulatorTable.unlock();
+                stringNum = "";
                 counter++;
             }
         }
     }
 
     //clean the buffer before sending it to updat the map, send line after line
-    void  updateBufAndValue(char buffer []) {
+    void updateBufAndValue(char buffer[]) {
 
         string lineForTable;
         string str;
@@ -442,35 +441,35 @@ namespace Global_Functions {
         int isExist;
         size_t position = str.find("\n");      // position of "live" in str
         //substr the first line mybe she isn"t completly
-        str = str.substr(position + 1,str.length());
         isExist = str.find("\n");
-//    position = str.find("\n");
         while (isExist != -1) {
 
-            lineForTable = str.substr(0, isExist);
+            lineForTable = str.substr(0, isExist+1);
             updateVariablesVul(lineForTable);
-            str = str.substr(isExist + 1,str.length());
+            str = str.substr(isExist + 1, str.length());
             isExist = str.find("\n");
-//        position = str.find("\n");
-
         }
-
-
     }
 
 //the function that starting the thread of serverside
-    void  serverSide( int client_socket){
-        while (!closeSocketServer){
+    void serverSide(int client_socket) {
+        while (!closeSocketServer) {
             char buffer[1024] = {0};
             //reading from client(simulator) 36
-            int valread = read( client_socket , buffer, 1024);
+            int valread = read(client_socket, buffer, 1024);
+            cout<<"-----------buffer------------------"<<endl;
+            cout<<buffer<<endl;
             updateBufAndValue(buffer);
-//            sleep_for(seconds(2));
+       //c     sleep_for(seconds(2));
             const char *hello = "Hello, I can hear you! \n";
-            send(client_socket , hello , strlen(hello) , 0 );
+            send(client_socket, hello, strlen(hello), 0);
         }
-        close(client_socket);
-//        finishLock.unlock();
+        finishLock.lock();
+        if (closeSocketServer) {
+            finishLock.unlock();
+        }
+//        close(client_socket);
+////        finishLock.unlock();
 
     }
 
@@ -478,13 +477,13 @@ namespace Global_Functions {
 
 //open data server created uniq socket by special  port and we running the socket on separate thread
 
-    void openDataServer(int port){
+    void openDataServer(int port) {
 
         //create socket
         int socketfd = socket(AF_INET, SOCK_STREAM, 0);
         if (socketfd == -1) {
             //error
-            std::cerr << "Could not create a socket"<<std::endl;
+            std::cerr << "Could not create a socket" << std::endl;
 
         }
         //bind socket to IP address
@@ -498,90 +497,101 @@ namespace Global_Functions {
 
         //the actual bind command
         if (bind(socketfd, (struct sockaddr *) &address, sizeof(address)) == -1) {
-            std::cerr<<"Could not bind the socket to an IP"<<std::endl;
+            std::cerr << "Could not bind the socket to an IP" << std::endl;
             return;
         }
         //making socket listen to the port
         if (listen(socketfd, 5) == -1) { //can also set to SOMAXCON (max connections)
-            std::cerr<<"Error during listening command"<<std::endl;
+            std::cerr << "Error during listening command" << std::endl;
             return;
-        } else{
-            std::cout<<"Server is now listening ..."<<std::endl;
+        } else {
+            std::cout << "Server is now listening ..." << std::endl;
         }
         // accepting a client
-        int client_socket = accept(socketfd, (struct sockaddr *)&address,
-                                   (socklen_t*)&address);
+        int client_socket = accept(socketfd, (struct sockaddr *) &address,
+                                   (socklen_t *) &address);
         if (client_socket == -1) {
-            std::cerr<<"Error accepting client"<<std::endl;
+            std::cerr << "Error accepting client" << std::endl;
             return;
 
         }
         close(socketfd);
 
 //        finishLock.lock();
-        std::thread thread1(serverSide,client_socket);
+        std::thread thread1(serverSide, client_socket);
 
-        if(thread1.joinable()){
+        if (thread1.joinable()) {
             thread1.detach();
         }
     }
-//0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n
 
-   // 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\r\n
+    void creatMapSimToPairVar() {
 
-    void  creatMapSimToPairVar(){
-
-        mapSimToPairVar["/instrumentation/airspeed-indicator/indicated-speed-kt"] =  make_pair(nullptr,0);
-        mapSimToPairVar["/sim/time/warp"] = std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/switches/magnetos"] = std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/heading-indicator/offset-deg"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/altimeter/indicated-altitude-ft"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/altimeter/pressure-alt-ft"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/attitude-indicator/indicated-pitch-deg"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/attitude-indicator/indicated-roll-deg"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/attitude-indicator/internal-pitch-deg"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/attitude-indicator/internal-roll-deg"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/encoder/indicated-altitude-ft"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/encoder/pressure-alt-ft"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/gps/indicated-altitude-ft"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/gps/indicated-ground-speed-kt"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/gps/indicated-vertical-speed"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/heading-indicator/indicated-heading-deg"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/magnetic-compass/indicated-heading-deg"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/slip-skid-ball/indicated-slip-skid"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/turn-indicator/indicated-turn-rate"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/instrumentation/vertical-speed-indicator/indicated-speed-fpm"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/flight/aileron"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/flight/elevator"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/flight/rudder"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/flight/flaps"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/engines/engine/throttle"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/engines/current-engine/throttle"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/switches/master-avionics"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/switches/starter"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/engines/active-engine/auto-start"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/flight/speedbrake"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/sim/model/c172p/brake-parking"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/engines/engine/primer"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/engines/current-engine/mixture"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/switches/master-bat"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/controls/switches/master-alt"] =std::make_pair(nullptr,0);
-        mapSimToPairVar["/engines/engine/rpm"] = std::make_pair(nullptr,0);
+        mapSimToPairVar["/instrumentation/airspeed-indicator/indicated-speed-kt"] = make_pair(nullptr, 0);
+        mapSimToPairVar["/sim/time/warp"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/switches/magnetos"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/heading-indicator/offset-deg"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/altimeter/indicated-altitude-ft"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/altimeter/pressure-alt-ft"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/attitude-indicator/indicated-pitch-deg"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/attitude-indicator/indicated-roll-deg"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/attitude-indicator/internal-pitch-deg"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/attitude-indicator/internal-roll-deg"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/encoder/indicated-altitude-ft"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/encoder/pressure-alt-ft"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/gps/indicated-altitude-ft"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/gps/indicated-ground-speed-kt"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/gps/indicated-vertical-speed"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/heading-indicator/indicated-heading-deg"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/magnetic-compass/indicated-heading-deg"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/slip-skid-ball/indicated-slip-skid"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/turn-indicator/indicated-turn-rate"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/instrumentation/vertical-speed-indicator/indicated-speed-fpm"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/flight/aileron"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/flight/elevator"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/flight/rudder"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/flight/flaps"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/engines/engine/throttle"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/engines/current-engine/throttle"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/switches/master-avionics"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/switches/starter"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/engines/active-engine/auto-start"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/flight/speedbrake"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/sim/model/c172p/brake-parking"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/engines/engine/primer"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/engines/current-engine/mixture"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/switches/master-bat"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/controls/switches/master-alt"] = std::make_pair(nullptr, 0);
+        mapSimToPairVar["/engines/engine/rpm"] = std::make_pair(nullptr, 0);
 
 
-}
+    }
 ////-----------------------------connect as a client to the simulator--------------------------------------------------
 
 
 // Client side C/C++ program to demonstrate Socket programming
 
-void connectControlClient(string ip, int port){
+    void connectControlClient(string ip, int port) {
 
-    //create socket
+        std::thread thread2(clientSide, ip, port); //closing the listening socket);
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        if (thread2.joinable()) {
+            thread2.detach();
+        }
+
+    }
+
+//
+//        close(client_socket);
+
+
+//the function that starting the thread of server side
+    void clientSide(string ip, int port) {
+        //create socket
         int client_socket = socket(AF_INET, SOCK_STREAM, 0);
         if (client_socket == -1) {
             //error
-            std::cerr << "Could not create a socket"<<std::endl;
+            std::cerr << "Could not create a socket" << std::endl;
 
         }
 
@@ -594,54 +604,42 @@ void connectControlClient(string ip, int port){
         // to a number that the network understands.
 
         // Requesting a connection with the server on local host with port 8081
-        int is_connect = connect(client_socket, (struct sockaddr *)&address, sizeof(address));
+        int is_connect = connect(client_socket, (struct sockaddr *) &address, sizeof(address));
         if (is_connect == -1) {
-            std::cerr << "Could not connect to host server"<<std::endl;
+            std::cerr << "Could not connect to host server" << std::endl;
             return;
         } else {
-            std::cout<<"Client is now connected to server" <<std::endl;
-        }
-
-
-        std::thread thread2(clientSide,client_socket); //closing the listening socket);
-
-        if(thread2.joinable()){
-            thread2.detach();
-        }
-
-
-//
-
-//
-//        close(client_socket);
-
-    }
-//the function that starting the thread of server side
-    void  clientSide( int client_socket) {
-        while (!isDoneCloseSocketClient) {
-            if (!queueMessages.empty()) {
-                //take messege from the global queue
-                char bufferMessege[queueMessages.front().length()];
-                //insert to the buffer messege
+            std::cout << "Client is now connected to server" << std::endl;
+            //std::this_thread::sleep_for (std::chrono::seconds(5));
+            while (!Global_Functions::isDoneCloseSocketClient) {
+                if (!Global_Functions::queueMessages.empty()) {
+                    //take messege from the global queue
+                           char bufferMessege[queueMessages.front().length()];
+                 //   insert to the buffer messege
                 strcpy(bufferMessege, queueMessages.front().c_str());
-                int is_sent = send(client_socket, bufferMessege, strlen(bufferMessege), 0);
-                if (is_sent == -1) {
-              //      std::cout << "Error sending message" << std::endl;
-                    char buffer[1024] = {0};
-                    int valread = read(client_socket, buffer, 1024);
-                    std::cout << buffer << std::endl;
-                } else {
-                    std::this_thread::sleep_for (std::chrono::seconds(1));
+
+
+//                    int is_sent = send(client_socket, bufferMessege, queueMessages.front().length(), 0);
+                    int is_sent =  write(client_socket,queueMessages.front().c_str(), queueMessages.front().length());
+                    if (is_sent == -1) {
+                        std::cout << "Error sending message" << std::endl;
+
+                    } else {
+                        char buffer[1024] = {0};
+                        int valread = read(client_socket, buffer, 1024);
+                        std::cout << buffer << std::endl;
+                    //    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                    }
+                    queueMessages.pop();
                 }
+
+
+
             }
             close(client_socket);
-            closeSocketServer = true;
+            Global_Functions::closeSocketServer = true;
+
 
         }
-
-
     }
 }
-
-
-
