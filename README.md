@@ -3,7 +3,7 @@
 
 ## Table of contents
 * [General info](#general-info)
-* [More about the project](#More about the project)
+* [More about the project](#more-about-the-project)
 * [Screenshots](#screenshots)
 * [Setup](#setup)
 * [Status](#status)
@@ -11,6 +11,7 @@
 ## General info
 This project enable you to control the flight simulator by sending flying commands to the simulator and 
 get info of the flight path simulator.  isn't it exsiting? 
+
 ## More about the project
 The program first lexer the script it was giving to her, then parses it and execute each command. 
 Meanwhile, the programs opens a server in another thread which stores data from the simulator(the simulator connects to this server as a client). With the script, the programs sends commands to the simulator and autopilot and airplane.
