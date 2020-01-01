@@ -38,7 +38,7 @@ namespace Global_Functions {
     void  clientSide( string ip, int port);
     void connectControlClient(string ip, int port);
 
-
+    ////--------------global variable-----------------
     extern unordered_map<string, Command *> command_table;
     extern unordered_map<string, Var *> symbolTable;
     extern unordered_map<string, pair<Var* ,float>> mapSimToPairVar;

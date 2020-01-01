@@ -13,7 +13,6 @@
 #include <iterator>
 
 
-
 using namespace Global_Functions;
 
 using namespace std;
@@ -223,7 +222,7 @@ int SleepCommand::execute(vector<string> v) {
 //make the thread sleep
     this->numparm = 1;
     this->mili = interpreter(v.at(0));
-    std::this_thread::sleep_for (std::chrono::milliseconds(10*(this->mili)));
+    std::this_thread::sleep_for (std::chrono::milliseconds(this->mili));
     return this->numparm;
 }
 

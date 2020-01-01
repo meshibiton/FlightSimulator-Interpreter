@@ -110,7 +110,6 @@ namespace Global_Functions {
 //implement the execute of each line--------------------------------------------
 
     void parser(vector<string> vectorLexer, string flagCondition) {
-//        finishLock.lock();
         vector<string>::iterator it1;
         string tempString;
         int index = 0;
@@ -168,8 +167,6 @@ namespace Global_Functions {
                     replace(line.begin(), line.end(), '(', ' ');
                     tempResultVector = lineVector(line, ' ');
                     lexerVactor.insert(lexerVactor.end(), tempResultVector.begin(), tempResultVector.end());
-
-
                 } else
                     //check if the prefix is connectControlClient
                     //example:   connectControlClient("127.0.0.1",5402)
@@ -222,7 +219,7 @@ namespace Global_Functions {
                     //ex:  Print(rpm)
                 if (line.rfind("Print", 0) == 0) {
                     line = earseChar(line, ")");
-//                line = earseChar(line, "\"");
+                    //line = earseChar(line, "\"");
                     tempResultVector = lineVector(line, '(');
                     lexerVactor.insert(lexerVactor.end(), tempResultVector.begin(), tempResultVector.end());
                 } else
@@ -238,16 +235,16 @@ namespace Global_Functions {
                     //ex: primer = 3, 	aileron = -roll / 70
                     //ex: if line contain '='
                 if (line.find('=') != std::string::npos) {
-//                replace(line.begin(), line.end(), '(', ' ');
-//                replace(line.begin(), line.end(), ')', ' ');
+                    //replace(line.begin(), line.end(), '(', ' ');
+                    //replace(line.begin(), line.end(), ')', ' ');
                     tempResultVector = lineVector(line, '=');
                     lexerVactor.push_back(tempResultVector[0]);
                     lexerVactor.push_back("=");
                     lexerVactor.push_back(tempResultVector[1]);
 
                 }
-//            all the other line
-//           ex: Print(rpm)
+                // all the other line
+                // ex: Print(rpm)
                 else {
                     replace(line.begin(), line.end(), '(', ' ');
                     line = earseChar(line, ")");
@@ -298,10 +295,14 @@ namespace Global_Functions {
         unordered_map<string, pair<Var *, float >>::iterator iter;
         string stringNum = "";
         int counter = 0;
+        //loop on each  char and split them to double num
         for (int i = 0; i < line.length(); i++) {
             char char1 = line[i];
+            //if done read double num
             if (char1 != ',' && char1 != '\n') {
                 stringNum += char1;
+                //we need to find the path of the double num by using the counter,
+                // the counter point to the place order of the num double in the xml file
             } else {
                 switch (counter) {
                     case 0:
@@ -314,7 +315,7 @@ namespace Global_Functions {
                         iter = mapSimToPairVar.find("/controls/switches/magnetos");
                         break;
                     case 3:
-                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/indicated-heading-deg");
+                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/offset-deg");
                         break;
                     case 4:
                         iter = mapSimToPairVar.find("/instrumentation/altimeter/indicated-altitude-ft");
@@ -351,7 +352,7 @@ namespace Global_Functions {
                         break;
 
                     case 15:
-                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/offset-deg");
+                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/indicated-heading-deg");
                         break;
                     case 16:
                         iter = mapSimToPairVar.find("/instrumentation/magnetic-compass/indicated-heading-deg");
@@ -444,7 +445,7 @@ namespace Global_Functions {
         isExist = str.find("\n");
         while (isExist != -1) {
 
-            lineForTable = str.substr(0, isExist+1);
+            lineForTable = str.substr(0, isExist + 1);
             updateVariablesVul(lineForTable);
             str = str.substr(isExist + 1, str.length());
             isExist = str.find("\n");
@@ -457,18 +458,19 @@ namespace Global_Functions {
             char buffer[1024] = {0};
             //reading from client(simulator) 36
             int valread = read(client_socket, buffer, 1024);
-            cout<<"-----------buffer------------------"<<endl;
-            cout<<buffer<<endl;
+//            cout << "-----------buffer------------------" << endl;
+//            cout << buffer << endl;
             updateBufAndValue(buffer);
-       //c     sleep_for(seconds(2));
+            //c     sleep_for(seconds(2));
             const char *hello = "Hello, I can hear you! \n";
             send(client_socket, hello, strlen(hello), 0);
         }
         finishLock.lock();
         if (closeSocketServer) {
+            close(client_socket);
             finishLock.unlock();
         }
-//        close(client_socket);
+
 ////        finishLock.unlock();
 
     }
@@ -568,7 +570,6 @@ namespace Global_Functions {
     }
 ////-----------------------------connect as a client to the simulator--------------------------------------------------
 
-
 // Client side C/C++ program to demonstrate Socket programming
 
     void connectControlClient(string ip, int port) {
@@ -578,11 +579,8 @@ namespace Global_Functions {
         if (thread2.joinable()) {
             thread2.detach();
         }
-
     }
 
-//
-//        close(client_socket);
 
 
 //the function that starting the thread of server side
@@ -610,17 +608,14 @@ namespace Global_Functions {
             return;
         } else {
             std::cout << "Client is now connected to server" << std::endl;
-            //std::this_thread::sleep_for (std::chrono::seconds(5));
             while (!Global_Functions::isDoneCloseSocketClient) {
                 if (!Global_Functions::queueMessages.empty()) {
                     //take messege from the global queue
-                           char bufferMessege[queueMessages.front().length()];
-                 //   insert to the buffer messege
-                strcpy(bufferMessege, queueMessages.front().c_str());
+                    char bufferMessege[queueMessages.front().length()];
+                    //   insert to the buffer messege
+                    strcpy(bufferMessege, queueMessages.front().c_str());
 
-
-//                    int is_sent = send(client_socket, bufferMessege, queueMessages.front().length(), 0);
-                    int is_sent =  write(client_socket,queueMessages.front().c_str(), queueMessages.front().length());
+                    int is_sent = write(client_socket, queueMessages.front().c_str(), queueMessages.front().length());
                     if (is_sent == -1) {
                         std::cout << "Error sending message" << std::endl;
 
@@ -628,18 +623,16 @@ namespace Global_Functions {
                         char buffer[1024] = {0};
                         int valread = read(client_socket, buffer, 1024);
                         std::cout << buffer << std::endl;
-                    //    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                     }
                     queueMessages.pop();
                 }
 
 
-
             }
             close(client_socket);
+            //after closing the client socket the server socket
+            // loop will stop and move to close the server socket
             Global_Functions::closeSocketServer = true;
-
-
         }
     }
 }

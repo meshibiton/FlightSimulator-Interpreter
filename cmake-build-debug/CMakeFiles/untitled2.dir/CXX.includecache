@@ -6,26 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/raph/CLionProjects/finalProject (copy)/Command.cpp
-utility
--
-Command.h
-/home/raph/CLionProjects/finalProject (copy)/Command.h
-iostream
--
-bits/stdc++.h
--
-vector
--
-unordered_map
--
-Interpreter.h
-/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
-GlobalFunction.h
-/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.h
-iterator
--
-
 /home/raph/CLionProjects/finalProject (copy)/Command.h
 iostream
 -
@@ -112,14 +92,6 @@ Interpreter.h
 Command.h
 /home/raph/CLionProjects/finalProject (copy)/Command.h
 
-/home/raph/CLionProjects/finalProject (copy)/Interpreter.cpp
-Interpreter.h
-/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
-Command.h
-/home/raph/CLionProjects/finalProject (copy)/Command.h
-GlobalFunction.h
-/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.h
-
 /home/raph/CLionProjects/finalProject (copy)/Interpreter.h
 string
 -
@@ -143,26 +115,4 @@ cstring
 -
 iostream
 -
-
-/home/raph/CLionProjects/finalProject (copy)/main.cpp
-iostream
--
-fstream
--
-string
--
-algorithm
--
-vector
--
-sstream
--
-unordered_map
--
-Command.h
-/home/raph/CLionProjects/finalProject (copy)/Command.h
-GlobalFunction.h
-/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.h
-Interpreter.h
-/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
 
