@@ -79,9 +79,8 @@ namespace Global_Functions {
     string earseChar(string string1, string chars) {
         for (char c: chars) {
             string1.erase(std::remove(string1.begin(), string1.end(), c), string1.end());
-            return string1;
         }
-
+        return string1;
     }
 
 //print the vector--------------------------------------------
@@ -204,7 +203,7 @@ namespace Global_Functions {
                     replace(line.begin(), line.end(), '(', ' ');
                     tempResultVector = lineVector(line, ' ');
 
-                    for (int i = 1; tempResultVector.size(); i++) {
+                    for (unsigned int i = 1; tempResultVector.size(); i++) {
                         if (tempResultVector[i] == "{") {
                             break;
                         } else {
@@ -253,15 +252,16 @@ namespace Global_Functions {
                 }
             }
             //remove the spaces from the and the beginning
-            for (int i = 0; i < lexerVactor.size(); i++) {
+            for (unsigned int i = 0; i < lexerVactor.size(); i++) {
                 lexerVactor[i] = TrimLeft(lexerVactor[i]);
                 lexerVactor[i] = TrimRight(lexerVactor[i]);
             }
             myfile.close();
-            return lexerVactor;
+
         } else {
             cout << "Unable to open file" << endl;
         }
+        return lexerVactor;
     }
 
 
@@ -493,7 +493,7 @@ namespace Global_Functions {
         sockaddr_in address; //in means IP4
         address.sin_family = AF_INET;
         address.sin_addr.s_addr = INADDR_ANY; //give me any IP allocated for my machine
-        address.sin_port = htons(5400);//5400
+        address.sin_port = htons(port);//5400
         //we need to convert our number
         // to a number that the network understands.
 
@@ -585,6 +585,7 @@ namespace Global_Functions {
 
 //the function that starting the thread of server side
     void clientSide(string ip, int port) {
+        const char* charIp = ip.c_str();
         //create socket
         int client_socket = socket(AF_INET, SOCK_STREAM, 0);
         if (client_socket == -1) {
@@ -596,8 +597,8 @@ namespace Global_Functions {
         //We need to create a sockaddr obj to hold address of server
         sockaddr_in address; //in means IP4
         address.sin_family = AF_INET;//IP4
-        address.sin_addr.s_addr = inet_addr("127.0.0.1");  //the localhost address
-        address.sin_port = htons(5402);//5402
+        address.sin_addr.s_addr = inet_addr(charIp);  //the localhost address
+        address.sin_port = htons(port);//5402
         //we need to convert our number (both port & localhost)
         // to a number that the network understands.
 
