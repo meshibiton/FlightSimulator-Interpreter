@@ -3,7 +3,7 @@
 
 ## Table of contents
 * [General info](#general-info)
-* [More about the project](#more)
+* [More about the project](#More about the project)
 * [Screenshots](#screenshots)
 * [Setup](#setup)
 * [Status](#status)
@@ -60,4 +60,4 @@ Project is:  in progress,finish mission 1 from 2.
 Half way!
 
 ## Contact
-Created by [@meshiBiton](https://github.com/meshibiton) [@raphaelHouri](https://github.com/raphaelHouri)- feel free to contact me! :mailbox_closed:
+Created by [@raphaelHouri](https://github.com/raphaelHouri) [@meshiBiton](https://github.com/meshibiton)- feel free to contact us! :mailbox_closed:
