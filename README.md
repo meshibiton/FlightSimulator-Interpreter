@@ -17,7 +17,12 @@ Meanwhile, the programs opens a server in another thread which stores data from 
 The simulator is a server that also can be connected as a client.
 
 ## Screenshots
-![Example screenshot](./img/fly1.jpeg)
+![Example screenshot](./img/fly2.jpeg)
+
+(./img/fly2.jpeg)
+
+(./img/fly3.jpeg)
+
 
 ## Setup 
 1. Download the simulator from :point_right: : http://home.flightgear.org/
