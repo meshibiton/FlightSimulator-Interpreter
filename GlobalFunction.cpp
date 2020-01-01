@@ -586,7 +586,7 @@ namespace Global_Functions {
 //the function that starting the thread of server side
     void clientSide(string ip, int port) {
         const char* charIp = ip.c_str();
-        //create socket
+        //create socket/
         int client_socket = socket(AF_INET, SOCK_STREAM, 0);
         if (client_socket == -1) {
             //error
