@@ -217,7 +217,7 @@ int LoopCommand::execute(vector<string> v) {
     return 0;
 }
 
-//----------------------------------
+//-----------------------------------
 int SleepCommand::execute(vector<string> v) {
 //make the thread sleep
     this->numparm = 1;
