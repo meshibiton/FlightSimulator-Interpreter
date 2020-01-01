@@ -54,4 +54,4 @@ Project is:  in progress,finish mission 1 from 2.
 Half way!
 
 ## Contact
-Created by [@meshiBiton](https://github.com/meshibiton) - feel free to contact me! :mailbox_closed:
+Created by [@meshiBiton](https://github.com/meshibiton) [@raphaelHouri](https://github.com/raphaelHouri)- feel free to contact me! :mailbox_closed:
