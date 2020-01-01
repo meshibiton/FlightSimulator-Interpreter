@@ -19,9 +19,10 @@ The simulator is a server that also can be connected as a client.
 ## Screenshots
 ![Example screenshot](./img/fly2.jpeg)
 
-(./img/fly2.jpeg)
+![Example screenshot](./img/fly1.jpeg)
 
-(./img/fly3.jpeg)
+![Example screenshot](./img/fly3.jpeg)
+
 
 
 ## Setup 
