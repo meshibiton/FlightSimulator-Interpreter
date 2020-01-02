@@ -73,4 +73,4 @@ Half way!
 ## Contact
 Created by [@raphaelHouri](https://github.com/raphaelHouri) [@meshiBiton](https://github.com/meshibiton)- feel free to contact us! :mailbox_closed:
 
-[I'm a relative reference to a repository file](../master/meshibiton/finalProject)
+[I'm a relative reference to a repository file](../meshibiton/master/finalProject)
