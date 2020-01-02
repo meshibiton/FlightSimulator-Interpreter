@@ -7,7 +7,7 @@
 * [Screenshots](#screenshots)
 * [Setup](#setup)
 * [Status](#status)
-* [Link](#link)
+* [Link](#link-to-the-project)
 
 ## General info
 This project enable you to control the flight simulator by sending flying commands to the simulator and 
