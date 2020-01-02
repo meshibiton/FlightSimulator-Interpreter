@@ -73,4 +73,4 @@ Half way!
 ## Contact
 Created by [@raphaelHouri](https://github.com/raphaelHouri) [@meshiBiton](https://github.com/meshibiton)- feel free to contact us! :mailbox_closed:
 
-[a link](https://github.com/meshibiton/finalProject)
+[**Link to the project**](https://github.com/meshibiton/finalProject)
