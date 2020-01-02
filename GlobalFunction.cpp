@@ -147,12 +147,13 @@ namespace Global_Functions {
 
 //create tokens -vector of tokens--------------------------------------------
 
-    vector<string> lexer() {
+    vector<string> lexer(char fileName1[]) {
         creatMapCommend();
         //read from file
         string line;
+        string fileName = fileName1;
         vector<string> lexerVactor;
-        ifstream myfile("fly.txt");
+        ifstream myfile(fileName);
         if (myfile.is_open()) {
             while (getline(myfile, line)) {
                 vector<string> tempResultVector;

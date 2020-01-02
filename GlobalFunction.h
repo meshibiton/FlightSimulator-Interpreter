@@ -18,7 +18,7 @@ namespace Global_Functions {
 
     vector<string> lineVector(string line, char char1);
 
-    vector<string> lexer();
+    vector<string> lexer(char argv[]);
 
     void printVector(vector<string> tokens);
 

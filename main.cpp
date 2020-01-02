@@ -14,9 +14,9 @@ using namespace std;
 using  namespace Global_Functions;
 
 
-int main() {
+int main(int argc, char* argv[]) {
     creatMapSimToPairVar();
-    vector<string> vec2 = lexer();
+    vector<string> vec2 = lexer(argv[1]);
     parser(vec2, "main");
     finishLock.lock();
     finishLock.unlock();
