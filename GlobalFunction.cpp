@@ -86,7 +86,7 @@ namespace Global_Functions {
 //print the vector--------------------------------------------
     void printVector(vector<string> tokens) {
         // Printing the token vector
-        for (int i = 0; i < tokens.size(); i++)
+        for (unsigned int i = 0; i < tokens.size(); i++)
             //    cout << tokens[i] + ' ';
             cout << tokens[i] + ' ';
     }
@@ -112,8 +112,8 @@ namespace Global_Functions {
         vector<string>::iterator it1;
         string tempString;
         int index = 0;
-        int oldVectorSize = vectorLexer.size();
-        for (int i = 0; i < oldVectorSize;) {
+        unsigned int oldVectorSize = vectorLexer.size();
+        for (unsigned int i = 0; i < oldVectorSize;) {
             tempString = vectorLexer[0];
 
             //when to delete the first object before sending
@@ -296,7 +296,7 @@ namespace Global_Functions {
         string stringNum = "";
         int counter = 0;
         //loop on each  char and split them to double num
-        for (int i = 0; i < line.length(); i++) {
+        for (unsigned int i = 0; i < line.length(); i++) {
             char char1 = line[i];
             //if done read double num
             if (char1 != ',' && char1 != '\n') {
@@ -440,7 +440,6 @@ namespace Global_Functions {
         string str;
         str = buffer;
         int isExist;
-        size_t position = str.find("\n");      // position of "live" in str
         //substr the first line mybe she isn"t completly
         isExist = str.find("\n");
         while (isExist != -1) {
@@ -458,6 +457,9 @@ namespace Global_Functions {
             char buffer[1024] = {0};
             //reading from client(simulator) 36
             int valread = read(client_socket, buffer, 1024);
+
+            if(valread && valread!=-1){
+            }
 //            cout << "-----------buffer------------------" << endl;
 //            cout << buffer << endl;
             updateBufAndValue(buffer);
@@ -612,7 +614,7 @@ namespace Global_Functions {
             while (!Global_Functions::isDoneCloseSocketClient) {
                 if (!Global_Functions::queueMessages.empty()) {
                     //take messege from the global queue
-                    char bufferMessege[queueMessages.front().length()];
+                    char bufferMessege[1024];
                     //   insert to the buffer messege
                     strcpy(bufferMessege, queueMessages.front().c_str());
 
@@ -623,11 +625,12 @@ namespace Global_Functions {
                     } else {
                         char buffer[1024] = {0};
                         int valread = read(client_socket, buffer, 1024);
-                        std::cout << buffer << std::endl;
+                        if(valread && valread!=-1){
+                            std::cout << buffer << std::endl;
+                        }
                     }
                     queueMessages.pop();
                 }
-
 
             }
             close(client_socket);

@@ -22,7 +22,7 @@ using namespace std;
 ///opensevercommand class function
 //-------------------------------------------------
 int OpenSeverCommand::execute(vector<string> v) {
-    this->numPort = stoi(v.at(0));
+    this->numPort = interpreter(v.at(0));
     this->numParm = 1;
     //here we will need to call the func ‫‪openDataServe
     openDataServer(this->numPort);
@@ -49,7 +49,7 @@ void OpenSeverCommand::setNumParm(int numParm) {
 //--------------------------------------------------------
 int ConnectCommand::execute(vector<string> v) {
     this->ip = v.at(0);
-    this->numPort = stoi(v.at(1));
+    this->numPort = interpreter(v.at(1));
     this->numParm = 2;
     Global_Functions::connectControlClient(this->ip, this->numPort);
     return this->numParm;
