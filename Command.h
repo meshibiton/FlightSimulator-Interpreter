@@ -13,7 +13,7 @@
 using namespace std;
 
 
-/// this is Base class-command, its an inteface- abstract class.
+/// this is Base class-command, its an inteface- abstract class..
 class Command {
 public:
     ///this method will be implement in his children.
