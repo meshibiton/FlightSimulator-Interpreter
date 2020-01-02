@@ -7,6 +7,7 @@
 * [Screenshots](#screenshots)
 * [Setup](#setup)
 * [Status](#status)
+* [Link](#link)
 
 ## General info
 This project enable you to control the flight simulator by sending flying commands to the simulator and 
@@ -73,4 +74,5 @@ Half way!
 ## Contact
 Created by [@raphaelHouri](https://github.com/raphaelHouri) [@meshiBiton](https://github.com/meshibiton)- feel free to contact us! :mailbox_closed:
 
-[**Link to the project**](https://github.com/meshibiton/finalProject)
+## Link to the project
+[**click here**](https://github.com/meshibiton/finalProject)
