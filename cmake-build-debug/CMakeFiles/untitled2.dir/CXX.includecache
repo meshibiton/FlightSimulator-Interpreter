@@ -6,79 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/raph/CLionProjects/finalProject (copy)/Command.h
-iostream
--
-string
--
-vector
--
-unordered_map
--
-
-/home/raph/CLionProjects/finalProject (copy)/Expression.h
-
-/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.cpp
-iostream
--
-bits/stdc++.h
--
-vector
--
-unordered_map
--
-Interpreter.h
-/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
-Command.h
-/home/raph/CLionProjects/finalProject (copy)/Command.h
-GlobalFunction.h
-/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.h
-algorithm
--
-iostream
--
-thread
--
-sys/socket.h
--
-string
--
-cstring
--
-iostream
--
-unistd.h
--
-netinet/in.h
--
-map
--
-string
--
-algorithm
--
+/home/meshi/CLionProjects/finalProjectt/Command.cpp
 utility
 -
-bits/unordered_map.h
--
-unordered_map
--
-mutex
--
-sys/socket.h
--
-string
--
-iostream
--
-unistd.h
--
-netinet/in.h
--
-arpa/inet.h
--
-
-/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.h
+Command.h
+/home/meshi/CLionProjects/finalProjectt/Command.h
 iostream
 -
 bits/stdc++.h
@@ -88,11 +20,39 @@ vector
 unordered_map
 -
 Interpreter.h
-/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
-Command.h
-/home/raph/CLionProjects/finalProject (copy)/Command.h
+/home/meshi/CLionProjects/finalProjectt/Interpreter.h
+GlobalFunction.h
+/home/meshi/CLionProjects/finalProjectt/GlobalFunction.h
+iterator
+-
 
-/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
+/home/meshi/CLionProjects/finalProjectt/Command.h
+iostream
+-
+string
+-
+vector
+-
+unordered_map
+-
+
+/home/meshi/CLionProjects/finalProjectt/Expression.h
+
+/home/meshi/CLionProjects/finalProjectt/GlobalFunction.h
+iostream
+-
+bits/stdc++.h
+-
+vector
+-
+unordered_map
+-
+Interpreter.h
+/home/meshi/CLionProjects/finalProjectt/Interpreter.h
+Command.h
+/home/meshi/CLionProjects/finalProjectt/Command.h
+
+/home/meshi/CLionProjects/finalProjectt/Interpreter.h
 string
 -
 stack
@@ -106,7 +66,7 @@ iterator
 map
 -
 Expression.h
-/home/raph/CLionProjects/finalProject (copy)/Expression.h
+/home/meshi/CLionProjects/finalProjectt/Expression.h
 ctype.h
 -
 sstream

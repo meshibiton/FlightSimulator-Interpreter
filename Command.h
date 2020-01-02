@@ -18,7 +18,8 @@ class Command {
 public:
     ///this method will be implement in his children.
     virtual int execute(vector<string>) = 0;
-    virtual ~Command()=0;
+
+    virtual ~Command() {}
 };
 
 //// Derived classes
@@ -27,11 +28,13 @@ private:
     int numPort;
     int numParm;
 public:
-    int execute(vector<string>) override ;
+    int execute(vector<string>) override;
+
 //    void openDataServer();
     void setNumPort(int numPort);
+
     void setNumParm(int numParm);
-    ~OpenSeverCommand();
+    ~OpenSeverCommand() override ;
 };
 
 class ConnectCommand : public Command {
@@ -40,9 +43,12 @@ private:
     string ip;
     int numParm;
 public:
-    int execute(vector<string>) override ;
+    int execute(vector<string>) override;
+
     void connectControlClient(string ip, int port);
-    ~ConnectCommand();
+
+
+    virtual ~ConnectCommand() override ;
 };
 
 class PrintCommand : public Command {
@@ -51,8 +57,10 @@ private:
     int numParm;
 public:
     //print the value
-    int execute(vector<string>) override ;
-    ~PrintCommand();
+    int execute(vector<string>) override;
+
+
+    virtual ~PrintCommand() override ;
 };
 
 class SleepCommand : public Command {
@@ -61,17 +69,23 @@ private:
     int numparm;
 public:
     //sleeping
-    int execute(vector<string>) override ;
-    ~SleepCommand();
+    int execute(vector<string>) override;
+
+
+    virtual ~SleepCommand() override ;
 };
 
 class DefineVarCommand : public Command {
 private:
     int numParm;
 public:
-    ~DefineVarCommand();
-    int execute(vector<string>) override ;
+
+
+    int execute(vector<string>) override;
+
     void BuildList(vector<string> v);
+
+    virtual ~DefineVarCommand() override ;
 };
 
 class Var : public DefineVarCommand {
@@ -83,12 +97,15 @@ private:
     //arrow left or right
     string side;
 public:
-    ~Var();
-    int execute(vector<string>) override ;
+
+
+    int execute(vector<string>) override;
 
     //constructor
     Var(string nameVar1, string side1, string sim1);
+
     Var(string nameVar1, double value);
+
     void setValue(double value);
 
     double getValue() const;
@@ -96,35 +113,48 @@ public:
     const string &getSim() const;
 
     const string &getSide() const;
+
+    virtual ~Var() override ;
 };
 
 class ConditionParser : public Command {
     ///Composite Pattern-holds list of commands
 private:
 public:
-    virtual ~ConditionParser()=0;
+
+
     virtual int execute(vector<string>);
+
     bool checkIfTrue(string);
+
+    virtual ~ConditionParser() override ;
+
     string condition;
 };
 
 ///child of conditionParser
 class IfCommand : public ConditionParser {
 private:
-    bool flagCondition=false;
+    bool flagCondition = false;
 public:
-    ~IfCommand();
-    int execute(vector<string>) override ;
+
+
+    int execute(vector<string>) override;
+
+    virtual ~IfCommand() override ;
 
 };
 
 ///child of conditionParser
 class LoopCommand : public ConditionParser {
 private:
-    bool flagCondition= false;
+    bool flagCondition = false;
 public:
-    ~LoopCommand();
-    int execute(vector<string>) override ;
+
+
+    int execute(vector<string>) override;
+
+    virtual ~LoopCommand() override ;
 };
 
 //extern unordered_map<string, Var *> symbolTable;
