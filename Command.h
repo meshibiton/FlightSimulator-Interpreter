@@ -18,6 +18,7 @@ class Command {
 public:
     ///this method will be implement in his children.
     virtual int execute(vector<string>) = 0;
+    virtual ~Command()=0;
 };
 
 //// Derived classes
@@ -30,6 +31,7 @@ public:
 //    void openDataServer();
     void setNumPort(int numPort);
     void setNumParm(int numParm);
+    ~OpenSeverCommand();
 };
 
 class ConnectCommand : public Command {
@@ -40,6 +42,7 @@ private:
 public:
     int execute(vector<string>) override ;
     void connectControlClient(string ip, int port);
+    ~ConnectCommand();
 };
 
 class PrintCommand : public Command {
@@ -49,6 +52,7 @@ private:
 public:
     //print the value
     int execute(vector<string>) override ;
+    ~PrintCommand();
 };
 
 class SleepCommand : public Command {
@@ -58,12 +62,14 @@ private:
 public:
     //sleeping
     int execute(vector<string>) override ;
+    ~SleepCommand();
 };
 
 class DefineVarCommand : public Command {
 private:
     int numParm;
 public:
+    ~DefineVarCommand();
     int execute(vector<string>) override ;
     void BuildList(vector<string> v);
 };
@@ -77,6 +83,7 @@ private:
     //arrow left or right
     string side;
 public:
+    ~Var();
     int execute(vector<string>) override ;
 
     //constructor
@@ -95,6 +102,7 @@ class ConditionParser : public Command {
     ///Composite Pattern-holds list of commands
 private:
 public:
+    virtual ~ConditionParser()=0;
     virtual int execute(vector<string>);
     bool checkIfTrue(string);
     string condition;
@@ -105,7 +113,9 @@ class IfCommand : public ConditionParser {
 private:
     bool flagCondition=false;
 public:
+    ~IfCommand();
     int execute(vector<string>) override ;
+
 };
 
 ///child of conditionParser
@@ -113,6 +123,7 @@ class LoopCommand : public ConditionParser {
 private:
     bool flagCondition= false;
 public:
+    ~LoopCommand();
     int execute(vector<string>) override ;
 };
 
