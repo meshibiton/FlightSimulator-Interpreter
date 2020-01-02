@@ -270,22 +270,25 @@ namespace Global_Functions {
 
     double interpreter(string expression) {
         Interpreter *i = new Interpreter();
-        Expression *e = nullptr;
+        Expression *e1 = nullptr;
+        double result=0;
         try {
-            e = i->interpret(expression);
-            double result = e->calculate();
+            e1 = i->interpret(expression);
+            result = e1->calculate();
             //std::cout << "6: " << result << std::endl;//-10
-            delete e;
+            delete e1;
             delete i;
             return result;
         } catch (const char *e) {
-            if (e != nullptr) {
-                delete e;
+            if (e1 != nullptr) {
+                delete e1;
             }
             if (i != nullptr) {
                 delete i;
             }
+            std::cout << e << std::endl;
         }
+        return result;
     }
 ////------------ function for openDataServer------------------
 

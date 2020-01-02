@@ -335,7 +335,7 @@ bool Interpreter::check(string c, stack<string> stack) {
         return true;
     }
     //<=,>=,<,> have priority on == , !=
-    if(((stack.top()=="<=")||(stack.top()=="<")||(stack.top()==">=")||(stack.top()==">"))&&(c=="==")||(c=="!=")){
+    if(((stack.top()=="<=")||(stack.top()=="<")||(stack.top()==">=")||(stack.top()==">"))&&((c=="==")||(c=="!="))){
         return true;
     }
     //otherwise each operator have priority on relative operation
@@ -366,7 +366,7 @@ Expression *Interpreter::Initial(string var) {
 void Interpreter::setVariables(string initialize) {
     string word;
     string var, value;
-    double value1;
+ //   double value1;
     unsigned int i = 0;
     bool negative = false;
     stringstream stream(initialize);
@@ -391,7 +391,7 @@ void Interpreter::setVariables(string initialize) {
                 throw "illegal variable assignment!";
             }
         }
-        value1 = stod(value);
+//        value1 = stod(value);
 //        if (this->valuesOfVariables.count(var) > 0) {
 //            this->valuesOfVariables.at(var) = value1;
 //        } else {

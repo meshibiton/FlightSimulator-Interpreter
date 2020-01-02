@@ -73,6 +73,7 @@ int Var::execute(vector<string> v) {
     if (symbolTable.at(v.at(0))->getSide() == "->") {
         Global_Functions::queueMessages.push("set " + path + " " + to_string(this->value) + "\r\n");
     }
+    return 0;
 }
 
 Var::Var(string nameVar1, string side1, string sim1) { // Constructor with parameters
@@ -85,6 +86,7 @@ Var::Var(string nameVar1, string side1, string sim1) { // Constructor with param
 Var::Var(string nameVar1, double value1) { // Constructor with parameters
     this->nameVar = nameVar1;
     this->value = value1;
+
 }
 
 void Var::setValue(double value1) {
@@ -122,8 +124,8 @@ int DefineVarCommand::execute(vector<string> v) {
             if (v.at(0).compare("rpm")==0){
                 cout<<to_string(symbolTable.at(v.at(0))->getValue())<<endl;
             }
-            this->numParm = 3;
             symbolTable.at(v.at(0))->execute(v);
+            this->numParm = 3;
             //now we will push a new message to the client queue,he will send them to the simulator
 //            string path = symbolTable.at(v.at(0))->getSim().substr(1);
 //            //thats mean it gonna effect the simulator
@@ -198,9 +200,9 @@ int ConditionParser::execute(vector<string> v) {
 }
 
 
-bool ConditionParser::checkIfTrue(string condition) {
+bool ConditionParser::checkIfTrue(string condition1) {
     double result;
-    result = interpreter(condition);
+    result = interpreter(condition1);
     if (result) {
         return true;
     }
