@@ -39,12 +39,15 @@ The simulator is a server that also can be connected as a client.
 
    (Go usr->share->games->flightgear->Protocol).
    
-4.To compile your code open your terminal and write:
-g++ -std=c++14 *.cpp -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -o a.out -pthread
+4. To compile your code open your terminal and write:
 
-5.To run  :running:  your code write: 
-./a.out file_name 
-in our case the file name is : fly.txt.
+   g++ -std=c++14 *.cpp -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -o a.out -pthread
+
+5. To run  :running:  your code write: 
+
+   ./a.out file_name 
+   
+   in our case the file name is : fly.txt.
 
 ## Code Examples
 List of commands:
