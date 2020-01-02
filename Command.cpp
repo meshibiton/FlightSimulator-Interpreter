@@ -34,12 +34,16 @@ int OpenSeverCommand::execute(vector<string> v) {
 //
 //}
 
-void OpenSeverCommand::setNumPort(int numPort) {
-    OpenSeverCommand::numPort = numPort;
+void OpenSeverCommand::setNumPort(int numPort1) {
+    OpenSeverCommand::numPort = numPort1;
 }
 
-void OpenSeverCommand::setNumParm(int numParm) {
-    OpenSeverCommand::numParm = numParm;
+void OpenSeverCommand::setNumParm(int numParm1) {
+    OpenSeverCommand::numParm = numParm1;
+}
+
+OpenSeverCommand::~OpenSeverCommand() {
+
 }
 
 //------------------------------------------------------
@@ -56,13 +60,19 @@ int ConnectCommand::execute(vector<string> v) {
 
 }
 
+ConnectCommand::~ConnectCommand() {}
 
 
 ///Var class function
 //--------------------------------------------------------
 int Var::execute(vector<string> v) {
+    //now we will push a new message to the client queue,he will send them to the simulator
+    string path = symbolTable.at(v.at(0))->getSim().substr(1);
+    //thats mean it gonna effect the simulator
     //need to do tell the simulator about the change- if the side is >
-   // cout << "map" << std::endl;
+    if (symbolTable.at(v.at(0))->getSide() == "->") {
+        Global_Functions::queueMessages.push("set " + path + " " + to_string(this->value) + "\r\n");
+    }
 }
 
 Var::Var(string nameVar1, string side1, string sim1) { // Constructor with parameters
@@ -72,9 +82,9 @@ Var::Var(string nameVar1, string side1, string sim1) { // Constructor with param
 }
 
 //just a var ,doesnt belong to the simulator
-Var::Var(string nameVar1, double value) { // Constructor with parameters
+Var::Var(string nameVar1, double value1) { // Constructor with parameters
     this->nameVar = nameVar1;
-    this->value = value;
+    this->value = value1;
 }
 
 void Var::setValue(double value1) {
@@ -93,6 +103,7 @@ double Var::getValue() const {
     return value;
 }
 
+Var::~Var() {}
 //--------------------------------------------------------
 
 //breaks -> sim("/controls/flight/speedbreak")
@@ -111,14 +122,15 @@ int DefineVarCommand::execute(vector<string> v) {
             if (v.at(0).compare("rpm")==0){
                 cout<<to_string(symbolTable.at(v.at(0))->getValue())<<endl;
             }
-            symbolTable.at(v.at(0))->execute(v);
             this->numParm = 3;
+            symbolTable.at(v.at(0))->execute(v);
             //now we will push a new message to the client queue,he will send them to the simulator
-            string path = symbolTable.at(v.at(0))->getSim().substr(1);
-            //thats mean it gonna effect the simulator
-            if (symbolTable.at(v.at(0))->getSide() == "->") {
-                Global_Functions::queueMessages.push("set " + path + " " + to_string(newValue) + "\r\n");
-            }
+//            string path = symbolTable.at(v.at(0))->getSim().substr(1);
+//            //thats mean it gonna effect the simulator
+//
+//            if (symbolTable.at(v.at(0))->getSide() == "->") {
+//                Global_Functions::queueMessages.push("set " + path + " " + to_string(newValue) + "\r\n");
+//            }
         }
     } else {
         //case "var h0=heading"-var that doesnt belong to simulator
@@ -151,6 +163,7 @@ int DefineVarCommand::execute(vector<string> v) {
 
 }
 
+DefineVarCommand::~DefineVarCommand() {}
 //--------------------------------------------------------
 
 //--------------------------------------------------------
@@ -184,6 +197,7 @@ int ConditionParser::execute(vector<string> v) {
     return count;
 }
 
+
 bool ConditionParser::checkIfTrue(string condition) {
     double result;
     result = interpreter(condition);
@@ -192,6 +206,8 @@ bool ConditionParser::checkIfTrue(string condition) {
     }
     return false;
 }
+
+ConditionParser::~ConditionParser() {}
 //--------------------------------------------------------
 
 
@@ -204,6 +220,8 @@ int IfCommand::execute(vector<string> v) {
     }
     return 0;
 }
+
+IfCommand::~IfCommand() {}
 //--------------------------------------------------------
 
 int LoopCommand::execute(vector<string> v) {
@@ -217,6 +235,8 @@ int LoopCommand::execute(vector<string> v) {
     return 0;
 }
 
+LoopCommand::~LoopCommand() {}
+
 //-----------------------------------
 int SleepCommand::execute(vector<string> v) {
 //make the thread sleep
@@ -226,6 +246,7 @@ int SleepCommand::execute(vector<string> v) {
     return this->numparm;
 }
 
+SleepCommand::~SleepCommand() {}
 
 //--------------------------------------------
 int PrintCommand::execute(vector<string> v) {
@@ -242,6 +263,7 @@ int PrintCommand::execute(vector<string> v) {
     return this->numParm;
 }
 
+PrintCommand::~PrintCommand() {}
 
 //--------------------------------------------------
 //void DefineVarCommand:: BuildList(vector<string> v) {
