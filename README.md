@@ -38,6 +38,13 @@ The simulator is a server that also can be connected as a client.
 3. The file “generic_small.xml” needs to be in the protocol folder under data of the simulator code.
 
    (Go usr->share->games->flightgear->Protocol).
+   
+4.To compile your code open your terminal and write:
+g++ -std=c++14 *.cpp -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -o a.out -pthread
+
+5.:runner: To run your code write: 
+./a.out file_name 
+in our case the file name is : fly.txt.
 
 ## Code Examples
 List of commands:
