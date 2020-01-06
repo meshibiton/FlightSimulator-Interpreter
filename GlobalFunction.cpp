@@ -62,7 +62,7 @@ namespace Global_Functions {
     }
 
 
-//create the commend table--------------------------------------------
+//create the commend table---------------------------------------------
     void creatMapCommend() {
         command_table["openDataServer"] = new OpenSeverCommand();
         command_table["connectControlClient"] = new ConnectCommand();
@@ -243,8 +243,8 @@ namespace Global_Functions {
                     lexerVactor.push_back(tempResultVector[1]);
 
                 }
-                // all the other line
-                // ex: Print(rpm)
+                    // all the other line
+                    // ex: Print(rpm)
                 else {
                     replace(line.begin(), line.end(), '(', ' ');
                     line = earseChar(line, ")");

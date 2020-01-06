@@ -4,10 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/meshi/CLionProjects/finalProjectt/Command.cpp" "/home/meshi/CLionProjects/finalProjectt/cmake-build-debug/CMakeFiles/untitled2.dir/Command.cpp.o"
-  "/home/meshi/CLionProjects/finalProjectt/GlobalFunction.cpp" "/home/meshi/CLionProjects/finalProjectt/cmake-build-debug/CMakeFiles/untitled2.dir/GlobalFunction.cpp.o"
-  "/home/meshi/CLionProjects/finalProjectt/Interpreter.cpp" "/home/meshi/CLionProjects/finalProjectt/cmake-build-debug/CMakeFiles/untitled2.dir/Interpreter.cpp.o"
-  "/home/meshi/CLionProjects/finalProjectt/main.cpp" "/home/meshi/CLionProjects/finalProjectt/cmake-build-debug/CMakeFiles/untitled2.dir/main.cpp.o"
+  "/home/raph/CLionProjects/finalProject1.1.20/Command.cpp" "/home/raph/CLionProjects/finalProject1.1.20/cmake-build-debug/CMakeFiles/untitled2.dir/Command.cpp.o"
+  "/home/raph/CLionProjects/finalProject1.1.20/GlobalFunction.cpp" "/home/raph/CLionProjects/finalProject1.1.20/cmake-build-debug/CMakeFiles/untitled2.dir/GlobalFunction.cpp.o"
+  "/home/raph/CLionProjects/finalProject1.1.20/Interpreter.cpp" "/home/raph/CLionProjects/finalProject1.1.20/cmake-build-debug/CMakeFiles/untitled2.dir/Interpreter.cpp.o"
+  "/home/raph/CLionProjects/finalProject1.1.20/main.cpp" "/home/raph/CLionProjects/finalProject1.1.20/cmake-build-debug/CMakeFiles/untitled2.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/meshi/CLionProjects/finalProjectt/Command.cpp
+/home/raph/CLionProjects/finalProject1.1.20/Command.cpp
 utility
 -
 Command.h
-/home/meshi/CLionProjects/finalProjectt/Command.h
+/home/raph/CLionProjects/finalProject1.1.20/Command.h
 iostream
 -
 bits/stdc++.h
@@ -20,13 +20,13 @@ vector
 unordered_map
 -
 Interpreter.h
-/home/meshi/CLionProjects/finalProjectt/Interpreter.h
+/home/raph/CLionProjects/finalProject1.1.20/Interpreter.h
 GlobalFunction.h
-/home/meshi/CLionProjects/finalProjectt/GlobalFunction.h
+/home/raph/CLionProjects/finalProject1.1.20/GlobalFunction.h
 iterator
 -
 
-/home/meshi/CLionProjects/finalProjectt/Command.h
+/home/raph/CLionProjects/finalProject1.1.20/Command.h
 iostream
 -
 string
@@ -36,9 +36,9 @@ vector
 unordered_map
 -
 
-/home/meshi/CLionProjects/finalProjectt/Expression.h
+/home/raph/CLionProjects/finalProject1.1.20/Expression.h
 
-/home/meshi/CLionProjects/finalProjectt/GlobalFunction.h
+/home/raph/CLionProjects/finalProject1.1.20/GlobalFunction.cpp
 iostream
 -
 bits/stdc++.h
@@ -48,11 +48,79 @@ vector
 unordered_map
 -
 Interpreter.h
-/home/meshi/CLionProjects/finalProjectt/Interpreter.h
+/home/raph/CLionProjects/finalProject1.1.20/Interpreter.h
 Command.h
-/home/meshi/CLionProjects/finalProjectt/Command.h
+/home/raph/CLionProjects/finalProject1.1.20/Command.h
+GlobalFunction.h
+/home/raph/CLionProjects/finalProject1.1.20/GlobalFunction.h
+algorithm
+-
+iostream
+-
+thread
+-
+sys/socket.h
+-
+string
+-
+cstring
+-
+iostream
+-
+unistd.h
+-
+netinet/in.h
+-
+map
+-
+string
+-
+algorithm
+-
+utility
+-
+bits/unordered_map.h
+-
+unordered_map
+-
+mutex
+-
+sys/socket.h
+-
+string
+-
+iostream
+-
+unistd.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
 
-/home/meshi/CLionProjects/finalProjectt/Interpreter.h
+/home/raph/CLionProjects/finalProject1.1.20/GlobalFunction.h
+iostream
+-
+bits/stdc++.h
+-
+vector
+-
+unordered_map
+-
+Interpreter.h
+/home/raph/CLionProjects/finalProject1.1.20/Interpreter.h
+Command.h
+/home/raph/CLionProjects/finalProject1.1.20/Command.h
+
+/home/raph/CLionProjects/finalProject1.1.20/Interpreter.cpp
+Interpreter.h
+/home/raph/CLionProjects/finalProject1.1.20/Interpreter.h
+Command.h
+/home/raph/CLionProjects/finalProject1.1.20/Command.h
+GlobalFunction.h
+/home/raph/CLionProjects/finalProject1.1.20/GlobalFunction.h
+
+/home/raph/CLionProjects/finalProject1.1.20/Interpreter.h
 string
 -
 stack
@@ -66,7 +134,7 @@ iterator
 map
 -
 Expression.h
-/home/meshi/CLionProjects/finalProjectt/Expression.h
+/home/raph/CLionProjects/finalProject1.1.20/Expression.h
 ctype.h
 -
 sstream
@@ -75,26 +143,4 @@ cstring
 -
 iostream
 -
-
-/home/raph/CLionProjects/finalProject (copy)/main.cpp
-iostream
--
-fstream
--
-string
--
-algorithm
--
-vector
--
-sstream
--
-unordered_map
--
-Command.h
-/home/raph/CLionProjects/finalProject (copy)/Command.h
-GlobalFunction.h
-/home/raph/CLionProjects/finalProject (copy)/GlobalFunction.h
-Interpreter.h
-/home/raph/CLionProjects/finalProject (copy)/Interpreter.h
 
