@@ -1,4 +1,3 @@
-// reading a text file
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -22,6 +21,7 @@ int main(int argc, char* argv[]) {
     }
     vector<string> vec2 = lexer(argv[1]);
     parser(vec2, "main");
+    //the lock will open when the parser will finished and the server socket will closed
     finishLock.lock();
     finishLock.unlock();
 
