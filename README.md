@@ -53,7 +53,7 @@ The simulator is a server that also can be connected as a client.
 ## Code Examples
 List of commands:
 
-* OpenDataServer [port] [hz] - open server to listen to the simulator.
+* OpenDataServer [port]- open server to listen to the simulator.
 
 * Connect [ip] [port] - connect to the simulator to send commands.
 
