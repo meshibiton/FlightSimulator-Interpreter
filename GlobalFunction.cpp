@@ -226,11 +226,22 @@ namespace Global_Functions {
                     //check if the prefix is while
                     //example: if (a == b) {
                 if (line.rfind("if", 0) == 0) {
-
+                    string condition = "";
+                    line = earseChar(line, ")");
                     replace(line.begin(), line.end(), '(', ' ');
-                    replace(line.begin(), line.end(), ')', ' ');
-                    tempResultVector = lineVector(line, '=');
-                    lexerVactor.insert(lexerVactor.end(), tempResultVector.begin(), tempResultVector.end());
+                    tempResultVector = lineVector(line, ' ');
+
+                    for (unsigned int i = 1; tempResultVector.size(); i++) {
+                        if (tempResultVector[i] == "{") {
+                            break;
+                        } else {
+                            condition = condition + tempResultVector[i];
+                        }
+                    }
+                    lexerVactor.push_back("if");
+                    lexerVactor.push_back(condition);
+                    lexerVactor.push_back("{");
+
                 } else
                     //ex: primer = 3, 	aileron = -roll / 70
                     //ex: if line contain '='
@@ -271,7 +282,7 @@ namespace Global_Functions {
     double interpreter(string expression) {
         Interpreter *i = new Interpreter();
         Expression *e1 = nullptr;
-        double result=0;
+        double result = 0;
         try {
             e1 = i->interpret(expression);
             result = e1->calculate();
@@ -293,183 +304,351 @@ namespace Global_Functions {
 ////------------ function for openDataServer------------------
 
 //update each line we get from the simultor
+//
+//    void updateVariablesVul(string line) {
+//
+//        unordered_map<string, pair<Var *, float >>::iterator iter;
+//        string stringNum = "";
+//        int counter = 0;
+//        //loop on each  char and split them to double num
+//        for (unsigned int i = 0; i < line.length(); i++) {
+//            char char1 = line[i];
+//            //if done read double num
+//            if (char1 != ',' && char1 != '\n') {
+//                stringNum += char1;
+//                //we need to find the path of the double num by using the counter,
+//                // the counter point to the place order of the num double in the xml file
+//            } else {
+//                switch (counter) {
+//                    case 0:
+//                        iter = mapSimToPairVar.find("/instrumentation/airspeed-indicator/indicated-speed-kt");
+//                        break;
+//                    case 1:
+//                        iter = mapSimToPairVar.find("/sim/time/warp");
+//                        break;
+//                    case 2:
+//                        iter = mapSimToPairVar.find("/controls/switches/magnetos");
+//                        break;
+//                    case 3:
+//                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/offset-deg");
+//                        break;
+//                    case 4:
+//                        iter = mapSimToPairVar.find("/instrumentation/altimeter/indicated-altitude-ft");
+//                        break;
+//                    case 5:
+//                        iter = mapSimToPairVar.find("/instrumentation/altimeter/pressure-alt-ft");
+//                        break;
+//                    case 6:
+//                        iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/indicated-pitch-deg");
+//                        break;
+//                    case 7:
+//                        iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/indicated-roll-deg");
+//                        break;
+//                    case 8:
+//                        iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/internal-pitch-deg");
+//                        break;
+//                    case 9:
+//                        iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/internal-roll-deg");
+//                        break;
+//                    case 10:
+//                        iter = mapSimToPairVar.find("/instrumentation/encoder/indicated-altitude-ft");
+//                        break;
+//                    case 11:
+//                        iter = mapSimToPairVar.find("/instrumentation/encoder/pressure-alt-ft");
+//                        break;
+//                    case 12:
+//                        iter = mapSimToPairVar.find("/instrumentation/gps/indicated-altitude-ft");
+//                        break;
+//                    case 13:
+//                        iter = mapSimToPairVar.find("/instrumentation/gps/indicated-ground-speed-kt");
+//                        break;
+//                    case 14:
+//                        iter = mapSimToPairVar.find("/instrumentation/gps/indicated-vertical-speed");
+//                        break;
+//
+//                    case 15:
+//                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/indicated-heading-deg");
+//                        break;
+//                    case 16:
+//                        iter = mapSimToPairVar.find("/instrumentation/magnetic-compass/indicated-heading-deg");
+//                        break;
+//                    case 17:
+//                        iter = mapSimToPairVar.find("/instrumentation/slip-skid-ball/indicated-slip-skid");
+//                        break;
+//                    case 18:
+//                        iter = mapSimToPairVar.find("/instrumentation/turn-indicator/indicated-turn-rate");
+//                        break;
+//                    case 19:
+//                        iter = mapSimToPairVar.find("/instrumentation/vertical-speed-indicator/indicated-speed-fpm");
+//                        break;
+//                    case 20:
+//                        iter = mapSimToPairVar.find("/controls/flight/aileron");
+//                        break;
+//                    case 21:
+//                        iter = mapSimToPairVar.find("/controls/flight/elevator");
+//                        break;
+//                    case 22:
+//                        iter = mapSimToPairVar.find("/controls/flight/rudder");
+//                        break;
+//                    case 23:
+//                        iter = mapSimToPairVar.find("/controls/flight/flaps");
+//                        break;
+//                    case 24:
+//                        iter = mapSimToPairVar.find("/controls/engines/engine/throttle");
+//                        break;
+//                    case 25:
+//                        iter = mapSimToPairVar.find("/controls/engines/current-engine/throttle");
+//                        break;
+//                    case 26:
+//                        iter = mapSimToPairVar.find("/controls/switches/master-avionics");
+//                        break;
+//                    case 27:
+//                        iter = mapSimToPairVar.find("/controls/switches/starter");
+//                        break;
+//                    case 28:
+//                        iter = mapSimToPairVar.find("/engines/active-engine/auto-start");
+//                        break;
+//                    case 29:
+//                        iter = mapSimToPairVar.find("/controls/flight/speedbrake");
+//                        break;
+//                    case 30:
+//                        iter = mapSimToPairVar.find("/sim/model/c172p/brake-parking");
+//                        break;
+//                    case 31:
+//                        iter = mapSimToPairVar.find("/controls/engines/engine/primer");
+//                        break;
+//                    case 32:
+//                        iter = mapSimToPairVar.find("/controls/engines/current-engine/mixture");
+//                        break;
+//                    case 33:
+//                        iter = mapSimToPairVar.find("/controls/switches/master-bat");
+//                        break;
+//                    case 34:
+//                        iter = mapSimToPairVar.find("/controls/switches/master-alt");
+//                        break;
+//                    case 35:
+//                        iter = mapSimToPairVar.find("/engines/engine/rpm");
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                //     int countP = 0;
+//                bool flag = true;
+//                if (stringNum.empty()) {
+//                    flag = false;
+//                }
+//                for (char c1:stringNum) {
+//                    if ((c1 >= '0' && c1 <= '9' || c1 == '.')) {
+//                        //   countP++;
+//
+//                    } else {
+//                        flag = false;
+//                        break;
+//                    }
+//                }
+//                if (flag) {
+//                    float numDouble = stof(stringNum);
+//
+//
+//                    //avoid from critical section
+//                    lockSimulatorTable.lock();
+//                    iter->second.second = numDouble;
+//                    if (iter->second.first != nullptr) {
+//                        iter->second.first->setValue(numDouble);
+//                    }
+//                    lockSimulatorTable.unlock();
+//                    stringNum = "";
+//                    counter++;
+//                } else {
+//                    stringNum = "";
+//                }
+//
+//
+//            }
+//        }
+//    }
+//
+//    //clean the buffer before sending it to update the map, send line after line
+//    void updateBufAndValue(char buffer[]) {
+//
+//
+//
+////        string lineForTable;
+////        string str;
+////        str = buffer;
+////        int isExist;
+////        //substr the first line mybe she isn"t completly
+////        isExist = str.find("\n");
+////        while (isExist != -1) {
+////
+////            lineForTable = str.substr(0, isExist + 1);
+////            updateVariablesVul(lineForTable);
+////            str = str.substr(isExist + 1, str.length());
+////            isExist = str.find("\n");
+////        }
+//    }
 
-    void updateVariablesVul(string line) {
-
-        unordered_map<string, pair<Var *, float >>::iterator iter;
-        string stringNum = "";
-        int counter = 0;
-        //loop on each  char and split them to double num
-        for (unsigned int i = 0; i < line.length(); i++) {
-            char char1 = line[i];
-            //if done read double num
-            if (char1 != ',' && char1 != '\n') {
-                stringNum += char1;
-                //we need to find the path of the double num by using the counter,
-                // the counter point to the place order of the num double in the xml file
-            } else {
-                switch (counter) {
-                    case 0:
-                        iter = mapSimToPairVar.find("/instrumentation/airspeed-indicator/indicated-speed-kt");
-                        break;
-                    case 1:
-                        iter = mapSimToPairVar.find("/sim/time/warp");
-                        break;
-                    case 2:
-                        iter = mapSimToPairVar.find("/controls/switches/magnetos");
-                        break;
-                    case 3:
-                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/offset-deg");
-                        break;
-                    case 4:
-                        iter = mapSimToPairVar.find("/instrumentation/altimeter/indicated-altitude-ft");
-                        break;
-                    case 5:
-                        iter = mapSimToPairVar.find("/instrumentation/altimeter/pressure-alt-ft");
-                        break;
-                    case 6:
-                        iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/indicated-pitch-deg");
-                        break;
-                    case 7:
-                        iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/indicated-roll-deg");
-                        break;
-                    case 8:
-                        iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/internal-pitch-deg");
-                        break;
-                    case 9:
-                        iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/internal-roll-deg");
-                        break;
-                    case 10:
-                        iter = mapSimToPairVar.find("/instrumentation/encoder/indicated-altitude-ft");
-                        break;
-                    case 11:
-                        iter = mapSimToPairVar.find("/instrumentation/encoder/pressure-alt-ft");
-                        break;
-                    case 12:
-                        iter = mapSimToPairVar.find("/instrumentation/gps/indicated-altitude-ft");
-                        break;
-                    case 13:
-                        iter = mapSimToPairVar.find("/instrumentation/gps/indicated-ground-speed-kt");
-                        break;
-                    case 14:
-                        iter = mapSimToPairVar.find("/instrumentation/gps/indicated-vertical-speed");
-                        break;
-
-                    case 15:
-                        iter = mapSimToPairVar.find("/instrumentation/heading-indicator/indicated-heading-deg");
-                        break;
-                    case 16:
-                        iter = mapSimToPairVar.find("/instrumentation/magnetic-compass/indicated-heading-deg");
-                        break;
-                    case 17:
-                        iter = mapSimToPairVar.find("/instrumentation/slip-skid-ball/indicated-slip-skid");
-                        break;
-                    case 18:
-                        iter = mapSimToPairVar.find("/instrumentation/turn-indicator/indicated-turn-rate");
-                        break;
-                    case 19:
-                        iter = mapSimToPairVar.find("/instrumentation/vertical-speed-indicator/indicated-speed-fpm");
-                        break;
-                    case 20:
-                        iter = mapSimToPairVar.find("/controls/flight/aileron");
-                        break;
-                    case 21:
-                        iter = mapSimToPairVar.find("/controls/flight/elevator");
-                        break;
-                    case 22:
-                        iter = mapSimToPairVar.find("/controls/flight/rudder");
-                        break;
-                    case 23:
-                        iter = mapSimToPairVar.find("/controls/flight/flaps");
-                        break;
-                    case 24:
-                        iter = mapSimToPairVar.find("/controls/engines/engine/throttle");
-                        break;
-                    case 25:
-                        iter = mapSimToPairVar.find("/controls/engines/current-engine/throttle");
-                        break;
-                    case 26:
-                        iter = mapSimToPairVar.find("/controls/switches/master-avionics");
-                        break;
-                    case 27:
-                        iter = mapSimToPairVar.find("/controls/switches/starter");
-                        break;
-                    case 28:
-                        iter = mapSimToPairVar.find("/engines/active-engine/auto-start");
-                        break;
-                    case 29:
-                        iter = mapSimToPairVar.find("/controls/flight/speedbrake");
-                        break;
-                    case 30:
-                        iter = mapSimToPairVar.find("/sim/model/c172p/brake-parking");
-                        break;
-                    case 31:
-                        iter = mapSimToPairVar.find("/controls/engines/engine/primer");
-                        break;
-                    case 32:
-                        iter = mapSimToPairVar.find("/controls/engines/current-engine/mixture");
-                        break;
-                    case 33:
-                        iter = mapSimToPairVar.find("/controls/switches/master-bat");
-                        break;
-                    case 34:
-                        iter = mapSimToPairVar.find("/controls/switches/master-alt");
-                        break;
-                    case 35:
-                        iter = mapSimToPairVar.find("/engines/engine/rpm");
-                        break;
-                    default:
-                        break;
-                }
-
-                float numDouble = stof(stringNum);
-
-                //avoid from critical section
-                lockSimulatorTable.lock();
-                iter->second.second = numDouble;
-                if (iter->second.first != nullptr) {
-                    iter->second.first->setValue(numDouble);
-                }
-                lockSimulatorTable.unlock();
-                stringNum = "";
-                counter++;
-            }
-        }
-    }
-
-    //clean the buffer before sending it to updat the map, send line after line
-    void updateBufAndValue(char buffer[]) {
-
-        string lineForTable;
-        string str;
-        str = buffer;
-        int isExist;
-        //substr the first line mybe she isn"t completly
-        isExist = str.find("\n");
-        while (isExist != -1) {
-
-            lineForTable = str.substr(0, isExist + 1);
-            updateVariablesVul(lineForTable);
-            str = str.substr(isExist + 1, str.length());
-            isExist = str.find("\n");
-        }
-    }
-
-//the function that starting the thread of serverside
+//update each line we get from the simultor
     void serverSide(int client_socket) {
-        while (!closeSocketServer) {
-            char buffer[1024] = {0};
-            //reading from client(simulator) 36
-            int valread = read(client_socket, buffer, 1024);
 
-            if(valread && valread!=-1){
+        try {
+            unordered_map<string, pair<Var *, float >>::iterator iter;
+//                SimMap* simMap = SimMap::getInstance();
+            string str = "";
+            // While the destructor doesn't called
+            while (!closeSocketServer) {
+                char buffer[500] = {0};
+                // Read from client
+                read(client_socket, buffer, 500);
+                // Convert to string
+                string bufferStr = buffer;
+                // Concatenate the rest of the string from the previous iteration to the string from the current iteration
+                str = str + bufferStr;
+                // Separate from the union string the first 36 values, until finding newline
+                string token1 = str.substr(0, str.find("\n"));
+                // Save the rest of the string to the next iteration
+                string token2 = str.substr(str.find("\n") + 1, str.length());
+                regex regex(",");
+                // Separate the 36 values by ',' and put them in vector
+                vector<string> out(
+                        sregex_token_iterator(token1.begin(), token1.end(), regex, -1),
+                        sregex_token_iterator()
+                );
+                for (int i = 0; i < 36; i++) {
+                    switch (i) {
+                        case 0:
+                            iter = mapSimToPairVar.find("/instrumentation/airspeed-indicator/indicated-speed-kt");
+                            break;
+                        case 1:
+                            iter = mapSimToPairVar.find("/sim/time/warp");
+                            break;
+                        case 2:
+                            iter = mapSimToPairVar.find("/controls/switches/magnetos");
+                            break;
+                        case 3:
+                            iter = mapSimToPairVar.find("/instrumentation/heading-indicator/offset-deg");
+                            break;
+                        case 4:
+                            iter = mapSimToPairVar.find("/instrumentation/altimeter/indicated-altitude-ft");
+                            break;
+                        case 5:
+                            iter = mapSimToPairVar.find("/instrumentation/altimeter/pressure-alt-ft");
+                            break;
+                        case 6:
+                            iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/indicated-pitch-deg");
+                            break;
+                        case 7:
+                            iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/indicated-roll-deg");
+                            break;
+                        case 8:
+                            iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/internal-pitch-deg");
+                            break;
+                        case 9:
+                            iter = mapSimToPairVar.find("/instrumentation/attitude-indicator/internal-roll-deg");
+                            break;
+                        case 10:
+                            iter = mapSimToPairVar.find("/instrumentation/encoder/indicated-altitude-ft");
+                            break;
+                        case 11:
+                            iter = mapSimToPairVar.find("/instrumentation/encoder/pressure-alt-ft");
+                            break;
+                        case 12:
+                            iter = mapSimToPairVar.find("/instrumentation/gps/indicated-altitude-ft");
+                            break;
+                        case 13:
+                            iter = mapSimToPairVar.find("/instrumentation/gps/indicated-ground-speed-kt");
+                            break;
+                        case 14:
+                            iter = mapSimToPairVar.find("/instrumentation/gps/indicated-vertical-speed");
+                            break;
+                        case 15:
+                            iter = mapSimToPairVar.find("/instrumentation/heading-indicator/indicated-heading-deg");
+                            break;
+                        case 16:
+                            iter = mapSimToPairVar.find("/instrumentation/magnetic-compass/indicated-heading-deg");
+                            break;
+                        case 17:
+                            iter = mapSimToPairVar.find("/instrumentation/slip-skid-ball/indicated-slip-skid");
+                            break;
+                        case 18:
+                            iter = mapSimToPairVar.find("/instrumentation/turn-indicator/indicated-turn-rate");
+                            break;
+                        case 19:
+                            iter = mapSimToPairVar.find(
+                                    "/instrumentation/vertical-speed-indicator/indicated-speed-fpm");
+                            break;
+                        case 20:
+                            iter = mapSimToPairVar.find("/controls/flight/aileron");
+                            break;
+                        case 21:
+                            iter = mapSimToPairVar.find("/controls/flight/elevator");
+                            break;
+                        case 22:
+                            iter = mapSimToPairVar.find("/controls/flight/rudder");
+                            break;
+                        case 23:
+                            iter = mapSimToPairVar.find("/controls/flight/flaps");
+                            break;
+                        case 24:
+                            iter = mapSimToPairVar.find("/controls/engines/engine/throttle");
+                            break;
+                        case 25:
+                            iter = mapSimToPairVar.find("/controls/engines/current-engine/throttle");
+                            break;
+                        case 26:
+                            iter = mapSimToPairVar.find("/controls/switches/master-avionics");
+                            break;
+                        case 27:
+                            iter = mapSimToPairVar.find("/controls/switches/starter");
+                            break;
+                        case 28:
+                            iter = mapSimToPairVar.find("/engines/active-engine/auto-start");
+                            break;
+                        case 29:
+                            iter = mapSimToPairVar.find("/controls/flight/speedbrake");
+                            break;
+                        case 30:
+                            iter = mapSimToPairVar.find("/sim/model/c172p/brake-parking");
+                            break;
+                        case 31:
+                            iter = mapSimToPairVar.find("/controls/engines/engine/primer");
+                            break;
+                        case 32:
+                            iter = mapSimToPairVar.find("/controls/engines/current-engine/mixture");
+                            break;
+                        case 33:
+                            iter = mapSimToPairVar.find("/controls/switches/master-bat");
+                            break;
+                        case 34:
+                            iter = mapSimToPairVar.find("/controls/switches/master-alt");
+                            break;
+                        case 35:
+                            iter = mapSimToPairVar.find("/engines/engine/rpm");
+                            break;
+                        default:
+                            break;
+                    }
+                    float numDouble = stof(out[i]);
+
+
+                    //avoid from critical section
+                    lockSimulatorTable.lock();
+                    iter->second.second = numDouble;
+                    if (iter->second.first != nullptr) {
+                        iter->second.first->setValue(numDouble);
+                    }
+                    lockSimulatorTable.unlock();
+                }
+
+                // Clear the vector for the next iteration
+                out.clear();
+                // Save the rest of the union string (without the 36 first values) in str
+                // so it will be unioned to the buffer in the next iteration
+                str = token2;
             }
-//            cout << "-----------buffer------------------" << endl;
-//            cout << buffer << endl;
-            updateBufAndValue(buffer);
-            //c     sleep_for(seconds(2));
-            const char *hello = "Hello, I can hear you! \n";
-            send(client_socket, hello, strlen(hello), 0);
+        } catch (exception e) {
+            // Close the listening socket
+            close(client_socket);
         }
         finishLock.lock();
         if (closeSocketServer) {
@@ -588,10 +767,9 @@ namespace Global_Functions {
     }
 
 
-
 //the function that starting the thread of server side
     void clientSide(string ip, int port) {
-        const char* charIp = ip.c_str();
+        const char *charIp = ip.c_str();
         //create socket/
         int client_socket = socket(AF_INET, SOCK_STREAM, 0);
         if (client_socket == -1) {
@@ -629,7 +807,7 @@ namespace Global_Functions {
                     } else {
                         char buffer[1024] = {0};
                         int valread = read(client_socket, buffer, 1024);
-                        if(valread && valread!=-1){
+                        if (valread && valread != -1) {
                             std::cout << buffer << std::endl;
                         }
                     }
